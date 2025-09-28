@@ -30,7 +30,7 @@
         .in-range { background-color: #ccfbf1; color: #134e4a; border-radius: 0; }
         .start-range { background-color: #0f766e; color: white; border-top-left-radius: 50%; border-bottom-left-radius: 50%; }
         .end-range { background-color: #0f766e; color: white; border-top-right-radius: 50%; border-bottom-right-radius: 50%; }
-        .disabled { color: #a8a29e; cursor: not-allowed; background-color: #f5f5f4; text-decoration: line-through; }
+        .disabled { color: #a8a29e; cursor: not-allowed; background-color: #fca5a5; text-decoration: line-through; }
         .hero-bg { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('playa.jpg'); background-size: cover; background-position: center; }
         .swiper-button-next, .swiper-button-prev { color: white !important; }
         .swiper-pagination-bullet-active { background: white !important; }
@@ -52,7 +52,7 @@
     <main class="pt-20 pb-24 md:pb-0">
         <div class="bg-teal-700 text-white py-2 overflow-x-hidden">
             <p class="marquee-text whitespace-nowrap text-sm font-semibold">
-                <span class="mx-8">*** PROMO 3x2 FINES DE SEMANA: VENÍ 3 DÍAS Y PAGÁ SÓLO 2 ***</span>
+                <span class="mx-8">*** PROMO 3x2 FINES DE SEMANA: VENÍ 3 DÍAS E PAGÁ SÓLO 2 ***</span>
                 <span class="mx-8">*** RESERVAS ANTICIPADAS: ¡APROVECHÁ LAS TARIFAS VIGENTES! ***</span>
                 <span class="mx-8">*** +7 DÍAS 10% DE DESCUENTO ***</span>
                 <span class="mx-8">*** +5 NOCHES 1 HORA DE PÁDEL GRATIS POR DÍA ***</span>
@@ -196,7 +196,26 @@
     </div>
     
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- =========== CONFIGURACIÓN DE FIREBASE (¡IMPORTANTE!) =========== -->
     <script>
+        // TU CONFIGURACIÓN DE FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMmyQj0F2EueVtZhQ47zbvIdxPG-ugwJE",
+            authDomain: "reservas-las-anforas.firebaseapp.com",
+            projectId: "reservas-las-anforas",
+            storageBucket: "reservas-las-anforas.appspot.com",
+            messagingSenderId: "634753900109",
+            appId: "1:634753900109:web:6fd46e4905791756e80604",
+            measurementId: "G-KSQBZP7CV2"
+        };
+
+        // PONE TU ID ÚNICA AQUÍ (debe ser la misma que uses en tu gestor)
+        const appId = "las-anforas-apart";
+    </script>
+    
+    <script>
+    // --- STATE & CONFIG ---
+    let allReservations = []; // This will be populated by Firebase
     const bookingState = { step: 1, duplex: null, checkIn: null, checkOut: null, guests: 2, padelHours: 0, lateCheckout: false, pets: 'no', vehicles: 'no', bringOwnTowels: false, babies: 0, firstName: '', lastName: '', phone: '', email: '', sendEmail: false, quote: {} };
     const DUPLEX_CONFIG = {
         duplex3: { name: 'Dúplex 3 (2 Dorms)', minGuests: 2, maxGuests: 5, prices: { 2: 51000, 3: 57000, 4: 65000, 5: 70000 }, beds: 4 },
@@ -205,10 +224,8 @@
     const PADEL_PRICE_PER_HOUR = 10000;
     const HOTEL_PHONE_NUMBER = '5493786410535'; 
     const TOWEL_DISCOUNT_PER_BED = 2000;
-    const BLOCKED_DATES = {
-        duplex3: [ { start: new Date('2025-09-26T12:00:00Z'), end: new Date('2025-12-31T12:00:00Z') } ],
-        duplex2: [ { start: new Date('2025-12-01T12:00:00Z'), end: new Date('2025-12-31T12:00:00Z') } ]
-    };
+    
+    // --- DOM ELEMENTS ---
     const steps = Array.from(document.getElementById('booking-app').querySelectorAll('.step-transition'));
     const progressIndicator = document.getElementById('progress-indicator');
     const guestsSelect = document.getElementById('guests-select');
@@ -234,7 +251,30 @@
     const infoNextBtn = document.getElementById('info-next-btn');
     const formatCurrency = (value) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0 }).format(value);
 
-    function isDateBlocked(date) { if (!bookingState.duplex) return false; const blockedPeriods = BLOCKED_DATES[bookingState.duplex]; if (!blockedPeriods) return false; for (const period of blockedPeriods) { const dateOnly = new Date(date); dateOnly.setUTCHours(0, 0, 0, 0); const startOnly = new Date(period.start); startOnly.setUTCHours(0, 0, 0, 0); const endOnly = new Date(period.end); endOnly.setUTCHours(0, 0, 0, 0); if (dateOnly >= startOnly && dateOnly <= endOnly) { return true; } } return false; }
+    // --- CORE FUNCTIONS ---
+    function isDateBlocked(date) { 
+        if (!bookingState.duplex) return false;
+        // Map public duplex name to admin duplex name
+        const adminDuplexName = (bookingState.duplex === 'duplex3') ? 'Duplex 3' : 'Duplex 2';
+        
+        const relevantReservations = allReservations.filter(r => r.duplex === adminDuplexName);
+
+        for (const reservation of relevantReservations) {
+            // Dates from firebase are strings like "2025-09-28"
+            // We create dates in UTC to avoid timezone issues
+            const startDate = new Date(reservation.checkInDate + 'T00:00:00Z');
+            const endDate = new Date(reservation.checkOutDate + 'T00:00:00Z');
+            const checkDate = new Date(date);
+            checkDate.setUTCHours(0,0,0,0);
+
+            // Block from check-in day up to (but not including) check-out day
+            if (checkDate >= startDate && checkDate < endDate) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     function getTowelDiscountAmount(duplex, guests, bringOwnTowels) { if (!bringOwnTowels) return 0; let bedsUsed = 0; if (duplex === 'duplex3') { if (guests <= 2) bedsUsed = 1; else if (guests === 3) bedsUsed = 2; else if (guests === 4) bedsUsed = 3; else if (guests >= 5) bedsUsed = 4; } else if (duplex === 'duplex2') { if (guests <= 2) bedsUsed = 1; else if (guests === 3) bedsUsed = 2; else if (guests === 4) bedsUsed = 3; else if (guests === 5) bedsUsed = 4; else if (guests >= 6) bedsUsed = 5; } return bedsUsed * TOWEL_DISCOUNT_PER_BED; }
     function calculatePriceComponents() { const { duplex, checkIn, checkOut, guests, padelHours, lateCheckout, bringOwnTowels } = bookingState; if (!duplex || !checkIn || !checkOut) return null; const config = DUPLEX_CONFIG[duplex]; const standardPricePerNight = config.prices[guests]; const promoBaseRate = DUPLEX_CONFIG.duplex3.prices[5]; const nights = (checkOut - checkIn) / 86400000; const isPromoEligible = checkIn.getUTCDay() === 5 && nights >= 2; let accommodationCost = 0; let longStayDiscount = 0; if (isPromoEligible) { const promoPackageCost = 2 * promoBaseRate; accommodationCost += promoPackageCost; const remainingNights = nights - 2; if (remainingNights > 0) { accommodationCost += remainingNights * standardPricePerNight; } } else { accommodationCost = nights * standardPricePerNight; if (nights >= 7) { longStayDiscount = accommodationCost * 0.10; } } const padelCost = padelHours * (PADEL_PRICE_PER_HOUR * 0.80); const isPromoWeekendOnly = isPromoEligible && nights === 2; const isLateCheckoutIncluded = isPromoWeekendOnly; const lateCheckoutCost = (lateCheckout && !isLateCheckoutIncluded) ? standardPricePerNight * 0.20 : 0; const towelDiscount = getTowelDiscountAmount(duplex, guests, bringOwnTowels); const total = accommodationCost - longStayDiscount - towelDiscount + padelCost + lateCheckoutCost; return { total, accommodationCost, longStayDiscount, padelCost, lateCheckoutCost, towelDiscount, nights, isPromoEligible, standardPricePerNight, promoBaseRate, config }; }
     function calculateDynamicPrice() { const components = calculatePriceComponents(); return components ? components.total : null; }
@@ -260,5 +300,51 @@
     function contactForCardPayment() { const { total, config } = bookingState.quote; const { firstName, lastName } = bookingState; const message = `¡Hola! Estoy interesado/a en abonar mi reserva para el ${config.name} con tarjeta de crédito. Mi nombre es ${firstName} ${lastName} y el total es de ${formatCurrency(total)}. ¿Podrían enviarme el link de pago? ¡Gracias!`; const whatsappUrl = `https://wa.me/${HOTEL_PHONE_NUMBER}?text=${encodeURIComponent(message)}`; window.open(whatsappUrl, '_blank'); }
     document.addEventListener('DOMContentLoaded', () => { document.getElementById('promo-badge').classList.remove('hidden'); attachEventListeners(); updateProgressBar(); new Swiper(".swiper-duplex2", { loop: true, autoplay: { delay: 4000, disableOnInteraction: false }, pagination: { el: ".swiper-duplex2 .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-duplex2 .swiper-button-next", prevEl: ".swiper-duplex2 .swiper-button-prev" } }); new Swiper(".swiper-duplex3", { loop: true, autoplay: { delay: 4500, disableOnInteraction: false }, pagination: { el: ".swiper-duplex3 .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-duplex3 .swiper-button-next", prevEl: ".swiper-duplex3 .swiper-button-prev" } }); new Swiper(".swiper-common", { loop: true, autoplay: { delay: 5000, disableOnInteraction: false }, pagination: { el: ".swiper-common .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-common .swiper-button-next", prevEl: ".swiper-common .swiper-button-prev" } }); });
     </script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        try {
+            // These variables are now defined in a <script> tag just before this one
+            if (typeof firebaseConfig === 'undefined' || typeof appId === 'undefined') {
+                console.error("Firebase config or App ID is not available.");
+            }
+            
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const auth = getAuth(app);
+            
+            onAuthStateChanged(auth, user => {
+                if (user) {
+                    // Correct path to the public reservations data
+                    const reservationsCol = collection(db, `/artifacts/${appId}/public/data/reservations`);
+                    listenForReservations(reservationsCol);
+                }
+            });
+
+            signInAnonymously(auth).catch(error => {
+                console.error("Anonymous sign-in failed:", error);
+                alert("No se pudo conectar al sistema de reservas. Por favor, intente de nuevo más tarde.");
+            });
+
+            function listenForReservations(reservationsCol) {
+                onSnapshot(query(reservationsCol), snapshot => {
+                    // Update the global variable with live data from the database
+                    allReservations = snapshot.docs.map(doc => doc.data());
+                    
+                    // If the user is on the date selection step, refresh the calendar
+                    if (bookingState.step === 2) {
+                        generateCalendar();
+                    }
+                }, error => {
+                    console.error("Error fetching reservations:", error);
+                });
+            }
+        } catch (error) {
+            console.error("Failed to initialize Firebase or booking system:", error);
+        }
+    </script>
 </body>
 </html>
+
