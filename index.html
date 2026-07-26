@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Las Ánforas Apart & Padel - Tu Escapada Perfecta en Ituzaingó</title>
-    
+    <title>Las Ánforas Apart Hotel & Padel - Tu Escapada Perfecta en Ituzaingó</title>
+
     <!-- SEO Meta Tags -->
     <meta name="description" content="Reserva tu estadía en Las Ánforas, apart hotel con cancha de pádel en Ituzaingó, Corrientes. Dúplex cómodos y seguros para una escapada perfecta.">
     <meta name="keywords" content="apart hotel ituzaingó, alquiler ituzaingó corrientes, cabañas con pádel, alojamiento en ituzaingó, las anforas apart, vacaciones en corrientes">
-    
+
     <!-- Open Graph Meta Tags (for social media sharing) -->
-    <meta property="og:title" content="Las Ánforas Apart & Padel">
+    <meta property="og:title" content="Las Ánforas Apart Hotel & Padel">
     <meta property="og:description" content="Reserva tu estadía en un lugar cómodo, seguro y tranquilo. ¡Tu escapada perfecta te espera!">
     <meta property="og:image" content="playa.jpg">
     <meta property="og:url" content="https://your-domain.com/"> <!-- UPDATE THIS WITH YOUR DOMAIN -->
@@ -42,7 +42,7 @@
     </style>
 </head>
 <body class="bg-stone-50 text-slate-800 antialiased">
-    
+
     <!-- Header -->
     <header class="bg-white/90 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 shadow-sm">
         <div class="container mx-auto max-w-6xl px-4">
@@ -56,7 +56,7 @@
     <main class="pt-20 pb-24 md:pb-0">
         <div class="bg-teal-700 text-white py-2 overflow-x-hidden"><p class="marquee-text whitespace-nowrap text-sm font-semibold"><span class="mx-8">*** PROMO 3x2 FINES DE SEMANA: VENÍ 3 DÍAS Y PAGÁ SÓLO 2 ***</span><span class="mx-8">*** RESERVAS ANTICIPADAS: ¡APROVECHÁ LAS TARIFAS VIGENTES! ***</span><span class="mx-8">*** +7 DÍAS 10% DE DESCUENTO ***</span><span class="mx-8">*** +5 NOCHES 1 HORA DE PÁDEL GRATIS POR DÍA ***</span></p></div>
         <section class="hero-bg text-white pt-20 pb-20 text-center"><div class="container mx-auto max-w-4xl px-4"><h1 class="text-4xl md:text-6xl font-brand leading-tight">Tu Escapada Perfecta</h1><p class="mt-4 text-lg md:text-xl text-slate-200">Disfruta de la comodidad de nuestros dúplex, juega al pádel y vive una experiencia inolvidable.</p><a href="#reservar" class="mt-8 inline-block bg-white text-teal-600 font-bold py-3 px-8 rounded-lg text-lg hover:bg-slate-100 transition-colors">¡Reservar Ahora!</a></div></section>
-        
+
         <section class="py-16 bg-stone-100">
             <div class="container mx-auto max-w-6xl px-4">
                 <div class="text-center mb-12">
@@ -97,7 +97,7 @@
                 </div>
             </div>
         </section>
-        
+
         <section id="reservar" class="py-20">
             <div class="container mx-auto max-w-4xl px-4">
                  <div class="text-center mb-12">
@@ -117,7 +117,7 @@
                 </main>
             </div>
         </section>
-        
+
         <section class="py-16 bg-white">
             <div class="container mx-auto max-w-6xl px-4">
                 <div class="text-center mb-12"><h2 class="text-4xl font-brand">Nuestros Dúplex</h2></div>
@@ -164,7 +164,7 @@
     </footer>
 
     <div id="mobile-footer" class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-slate-200 p-3 z-40 transition-transform translate-y-full"><div class="flex justify-between items-center"><button id="mobile-back-btn" class="text-slate-600 font-bold py-2 px-4 rounded-lg hover:bg-slate-100">Volver</button><div class="text-right"><p class="font-bold text-lg" id="mobile-price-display">Desde...</p><p class="text-sm text-slate-500" id="mobile-step-display">Paso 1 de 6</p></div><button id="mobile-next-btn" class="bg-teal-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed">Siguiente</button></div></div>
-    
+
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
     const bookingState = { step: 1, duplex: null, checkIn: null, checkOut: null, guests: 2, padelHours: 0, lateCheckout: false, pets: 'no', vehicles: 'no', bringOwnTowels: false, babies: 0, firstName: '', lastName: '', phone: '', email: '', sendEmail: false, quote: {} };
@@ -173,23 +173,33 @@
         duplex2: { name: 'Dúplex 2 (Familiar)', minGuests: 2, maxGuests: 6, prices: { 2: 51000, 3: 57000, 4: 65000, 5: 70000, 6: 75000 }, beds: 5 }
     };
     const PADEL_PRICE_PER_HOUR = 10000;
-    const HOTEL_PHONE_NUMBER = '5493786410535'; 
+    const HOTEL_PHONE_NUMBER = '5493786410535';
     const TOWEL_DISCOUNT_PER_BED = 2000;
-    
+
     // ==================================================================
-    // ===         BLOQUEO DE FECHAS CALENDARIO (ACTUALIZADO)           ===
+    // ===   DISPONIBILIDAD EN VIVO (Google Calendar vía Apps Script) ===
     // ==================================================================
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRzpqjQw8c_dSsRnwhVMYAwnhVuhHbvgkrkW2L71wts8wK0yxrS_Oo0Nw6cK55mQuKqA/exec";
+    const APPS_SCRIPT_URL = "PEGAR_AQUI_TU_URL_DE_EXEC";
     const BLOCKED_DATES = { duplex2: [], duplex3: [] };
 
     async function cargarFechasOcupadas(duplexType) {
         try {
-            const resp = await fetch(${APPS_SCRIPT_URL}?duplex=${duplexType}&action=ocupadas);
+            const resp = await fetch(`${APPS_SCRIPT_URL}?duplex=${duplexType}&action=ocupadas`);
             const data = await resp.json();
-            if (data.error) { console.error('Error de disponibilidad:', data.error); BLOCKED_DATES[duplexType] = []; return false; }
-            BLOCKED_DATES[duplexType] = data.ocupado.map(r => ({ start: new Date(r.start + 'T12:00:00Z'), end: new Date(r.end + 'T12:00:00Z') }));
+            if (data.error) {
+                console.error('Error de disponibilidad:', data.error);
+                BLOCKED_DATES[duplexType] = [];
+                return false;
+            }
+            BLOCKED_DATES[duplexType] = data.ocupado.map(r => ({
+                start: new Date(r.start + 'T12:00:00Z'),
+                end: new Date(r.end + 'T12:00:00Z')
+            }));
             return true;
-        } catch (err) { console.error('No se pudo conectar con disponibilidad:', err); return false; }
+        } catch (err) {
+            console.error('No se pudo conectar con disponibilidad:', err);
+            return false;
+        }
     }
     // ==================================================================
 
@@ -231,9 +241,9 @@
     function resetBookingState() { Object.assign(bookingState, { step: 1, duplex: null, checkIn: null, checkOut: null, guests: 2, padelHours: 0, lateCheckout: false, pets: 'no', vehicles: 'no', bringOwnTowels: false, babies: 0, firstName: '', lastName: '', phone: '', email: '', sendEmail: false, quote: {} }); guestsSelect.innerHTML = ''; babiesSelect.innerHTML = ''; padelInput.value = 0; petsSelect.value = 'no'; vehiclesSelect.value = 'no'; lateCheckoutInput.checked = false; towelDiscountCheckbox.checked = false; firstNameInput.value = ''; lastNameInput.value = ''; phoneInput.value = ''; emailInput.value = ''; emailCheckbox.checked = false; emailInputContainer.classList.add('hidden'); lateCheckoutContainer.style.display = 'none'; if(calendar.dateNextBtn) calendar.dateNextBtn.disabled = true; dateSubtitle.textContent = "Elige tu fecha de llegada y salida."; document.getElementById('promo-alert').classList.add('hidden'); updateMobileFooter(); }
     function resetAndGoToStep(step) { resetBookingState(); changeStep(step); }
     function updateGuestOptions() { const config = DUPLEX_CONFIG[bookingState.duplex]; const currentGuests = parseInt(guestsSelect.value); const currentBabies = parseInt(babiesSelect.value); const maxBabies = config.maxGuests - currentGuests; babiesSelect.innerHTML = ''; for (let i = 0; i <= maxBabies; i++) { const option = document.createElement('option'); option.value = i; option.textContent = i; babiesSelect.appendChild(option); } if (currentBabies > maxBabies) { babiesSelect.value = maxBabies; bookingState.babies = maxBabies; } else { babiesSelect.value = currentBabies; } updateMobileFooter(); }
-    function selectDuplex(duplexType) async function selectDuplex(duplexType) { bookingState.duplex = duplexType; bookingState.checkIn = null; bookingState.checkOut = null; if(calendar.dateNextBtn) calendar.dateNextBtn.disabled = true; const config = DUPLEX_CONFIG[duplexType]; guestsSelect.innerHTML = ''; for (let i = config.minGuests; i <= config.maxGuests; i++) { const option = document.createElement('option'); option.value = i; option.textContent = ${i}; guestsSelect.appendChild(option); } bookingState.guests = config.minGuests; guestsSelect.value = config.minGuests; bookingState.babies = 0; updateGuestOptions(); changeStep(2); dateSubtitle.textContent = "Consultando disponibilidad..."; if (calendar.container) calendar.container.innerHTML = '<p class="col-span-7 text-center text-slate-500 py-8">Cargando fechas disponibles...</p>'; const ok = await cargarFechasOcupadas(duplexType); dateSubtitle.textContent = ok ? "¡Aprovechá la Promo 3x2 en fines de semana!" : "No pudimos verificar disponibilidad ahora. Escribinos por WhatsApp para confirmar tus fechas."; generateCalendar(); }
+    async function selectDuplex(duplexType) { bookingState.duplex = duplexType; bookingState.checkIn = null; bookingState.checkOut = null; if(calendar.dateNextBtn) calendar.dateNextBtn.disabled = true; const config = DUPLEX_CONFIG[duplexType]; guestsSelect.innerHTML = ''; for (let i = config.minGuests; i <= config.maxGuests; i++) { const option = document.createElement('option'); option.value = i; option.textContent = `${i}`; guestsSelect.appendChild(option); } bookingState.guests = config.minGuests; guestsSelect.value = config.minGuests; bookingState.babies = 0; updateGuestOptions(); changeStep(2); dateSubtitle.textContent = "Consultando disponibilidad..."; if (calendar.container) calendar.container.innerHTML = '<p class="col-span-7 text-center text-slate-500 py-8">Cargando fechas disponibles...</p>'; const ok = await cargarFechasOcupadas(duplexType); dateSubtitle.textContent = ok ? "¡Aprovechá la Promo 3x2 en fines de semana!" : "No pudimos verificar disponibilidad ahora. Escribinos por WhatsApp para confirmar tus fechas."; generateCalendar(); }
     function attachEventListeners() { guestsSelect.addEventListener('change', (e) => { bookingState.guests = parseInt(e.target.value, 10); updateGuestOptions(); }); babiesSelect.addEventListener('change', (e) => { bookingState.babies = parseInt(e.target.value, 10); updateMobileFooter(); }); padelInput.addEventListener('input', (e) => { bookingState.padelHours = parseInt(e.target.value, 10) || 0; updateMobileFooter(); }); petsSelect.addEventListener('change', (e) => { bookingState.pets = e.target.value; }); vehiclesSelect.addEventListener('change', (e) => { bookingState.vehicles = e.target.value; }); lateCheckoutInput.addEventListener('change', (e) => { bookingState.lateCheckout = e.target.checked; updateMobileFooter(); }); towelDiscountCheckbox.addEventListener('change', (e) => { bookingState.bringOwnTowels = e.target.checked; updateMobileFooter(); }); emailCheckbox.addEventListener('change', (e) => { bookingState.sendEmail = e.target.checked; emailInputContainer.classList.toggle('hidden', !e.target.checked); }); emailInput.addEventListener('input', (e) => { bookingState.email = e.target.value; }); const validateInfo = () => { bookingState.firstName = firstNameInput.value; bookingState.lastName = lastNameInput.value; bookingState.phone = phoneInput.value; const isValid = bookingState.firstName.trim() !== '' && bookingState.lastName.trim() !== '' && bookingState.phone.trim() !== ''; infoNextBtn.disabled = !isValid; mobileNextBtn.disabled = !isValid; }; firstNameInput.addEventListener('input', validateInfo); lastNameInput.addEventListener('input', validateInfo); phoneInput.addEventListener('input', validateInfo); mobileNextBtn.addEventListener('click', mobileGoNext); mobileBackBtn.addEventListener('click', mobileGoBack); }
-    const calendar = { container: document.getElementById('calendar-grid'), monthYearEl: document.getElementById('month-year'), nextBtn: document.getElementById('next-month'), prevBtn: document.getElementById('prev-month'), dateNextBtn: document.getElementById('date-next-btn'), currentDate: new Date('2025-10-01T12:00:00Z'), minDate: new Date('2025-10-01T12:00:00Z'), maxDate: new Date('2027-03-31T12:00:00Z') };
+    const calendar = { container: document.getElementById('calendar-grid'), monthYearEl: document.getElementById('month-year'), nextBtn: document.getElementById('next-month'), prevBtn: document.getElementById('prev-month'), dateNextBtn: document.getElementById('date-next-btn'), currentDate: new Date('2025-10-01T12:00:00Z'), minDate: new Date('2025-10-01T12:00:00Z'), maxDate: new Date('2027-12-31T12:00:00Z') };
     function generateCalendar() { if (!calendar.container) return; calendar.container.innerHTML = ''; const year = calendar.currentDate.getUTCFullYear(); const month = calendar.currentDate.getUTCMonth(); calendar.monthYearEl.textContent = `${calendar.currentDate.toLocaleString('es-ES', { month: 'long', year: 'numeric' })}`; ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'].forEach(day => { const dayEl = document.createElement('div'); dayEl.className = 'font-semibold text-slate-500 text-sm'; dayEl.textContent = day; calendar.container.appendChild(dayEl); }); const firstDayOfMonth = new Date(Date.UTC(year, month, 1)).getUTCDay(); const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate(); for (let i = 0; i < firstDayOfMonth; i++) calendar.container.appendChild(document.createElement('div')); for (let day = 1; day <= daysInMonth; day++) { const dayEl = document.createElement('div'); const date = new Date(Date.UTC(year, month, day)); dayEl.className = 'calendar-day p-2 rounded-full cursor-pointer'; dayEl.textContent = day; const isOutOfRange = date < new Date(Date.UTC(calendar.minDate.getUTCFullYear(), calendar.minDate.getUTCMonth(), 1)) || date > calendar.maxDate; const blocked = isDateBlocked(date); if (isOutOfRange || blocked) { dayEl.classList.add('disabled'); } else { dayEl.onclick = () => selectDate(date); } if (bookingState.checkIn && date.getTime() === bookingState.checkIn.getTime()) dayEl.classList.add('selected', 'start-range'); if (bookingState.checkOut && date.getTime() === bookingState.checkOut.getTime()) dayEl.classList.add('selected', 'end-range'); if (bookingState.checkIn && bookingState.checkOut && date > bookingState.checkIn && date < bookingState.checkOut) dayEl.classList.add('in-range'); calendar.container.appendChild(dayEl); } updateCalendarNav(); }
     function updateCalendarNav() { const currentMonthStart = new Date(Date.UTC(calendar.currentDate.getUTCFullYear(), calendar.currentDate.getUTCMonth(), 1)); const minMonthStart = new Date(Date.UTC(calendar.minDate.getUTCFullYear(), calendar.minDate.getUTCMonth(), 1)); calendar.prevBtn.disabled = currentMonthStart <= minMonthStart; calendar.prevBtn.classList.toggle('opacity-50', calendar.prevBtn.disabled); const maxMonthStart = new Date(Date.UTC(calendar.maxDate.getUTCFullYear(), calendar.maxDate.getUTCMonth(), 1)); calendar.nextBtn.disabled = currentMonthStart >= maxMonthStart; calendar.nextBtn.classList.toggle('opacity-50', calendar.nextBtn.disabled); }
     function selectDate(date) { if (!bookingState.checkIn || (bookingState.checkIn && bookingState.checkOut)) { bookingState.checkIn = date; bookingState.checkOut = null; } else if (date > bookingState.checkIn) { bookingState.checkOut = date; } else { bookingState.checkIn = date; bookingState.checkOut = null; } const isRangeSelected = bookingState.checkIn && bookingState.checkOut; calendar.dateNextBtn.disabled = !isRangeSelected; mobileNextBtn.disabled = !isRangeSelected; const isPromoWeekendOnly = isRangeSelected && bookingState.checkIn.getUTCDay() === 5 && ((bookingState.checkOut - bookingState.checkIn) / 86400000) === 2; if (isRangeSelected && bookingState.checkOut.getUTCDay() === 0 && !isPromoWeekendOnly) { lateCheckoutContainer.style.display = 'flex'; } else { lateCheckoutContainer.style.display = 'none'; bookingState.lateCheckout = false; lateCheckoutInput.checked = false; } generateCalendar(); updateMobileFooter(); }
@@ -246,4 +256,3 @@
     </script>
 </body>
 </html>
-
