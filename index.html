@@ -98,6 +98,39 @@
             </div>
         </section>
 
+        <!-- ========================================================= -->
+        <!-- PROMOCIONES ACTIVAS (leidas en vivo desde Google Sheets)   -->
+        <!-- ========================================================= -->
+        <section id="promociones" class="py-16 bg-slate-50 border-t border-b border-slate-200">
+            <div class="container mx-auto max-w-6xl px-4">
+                <div class="text-center mb-10">
+                    <span class="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-100 px-3 py-1 rounded-full">Beneficios y Estadías Especiales</span>
+                    <h2 class="text-3xl font-bold text-slate-900 mt-3 font-brand">Promociones Activas</h2>
+                    <p class="text-slate-600 text-sm mt-1">Precios y condiciones fijas — elegí la que más te convenga.</p>
+                </div>
+                <div id="promo-cards-container" class="grid md:grid-cols-3 gap-6">
+                    <p class="col-span-3 text-center text-slate-400 py-8">Cargando promociones vigentes...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODAL DE RESERVA DE PROMO -->
+        <div id="promo-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full p-6">
+                <h3 id="promo-modal-titulo" class="text-xl font-bold mb-1 text-slate-800"></h3>
+                <p id="promo-modal-fechas" class="text-slate-600 text-sm mb-4"></p>
+                <div class="space-y-3 mb-4">
+                    <input id="promo-nombre" type="text" placeholder="Nombre" class="w-full border border-slate-300 rounded-lg p-2.5">
+                    <input id="promo-apellido" type="text" placeholder="Apellido" class="w-full border border-slate-300 rounded-lg p-2.5">
+                    <input id="promo-telefono" type="text" placeholder="Celular" class="w-full border border-slate-300 rounded-lg p-2.5">
+                    <input id="promo-email" type="email" placeholder="Email (opcional)" class="w-full border border-slate-300 rounded-lg p-2.5">
+                </div>
+                <p id="promo-modal-precio" class="font-bold text-lg mb-4 text-teal-800"></p>
+                <button id="promo-modal-confirmar" class="w-full bg-teal-600 text-white font-bold py-3 rounded-lg hover:bg-teal-700 transition-colors">Pagar seña y confirmar</button>
+                <button onclick="cerrarPromoModal()" class="w-full text-slate-500 mt-2 text-sm py-2">Cancelar</button>
+            </div>
+        </div>
+
         <section id="reservar" class="py-20">
             <div class="container mx-auto max-w-4xl px-4">
                  <div class="text-center mb-12">
@@ -195,6 +228,175 @@
     function asegurarTarifas() {
         if (!tarifasPromise) tarifasPromise = cargarTarifas();
         return tarifasPromise;
+    }
+
+    // ==================================================================
+    // ===   PROMOCIONES ACTIVAS (leidas en vivo desde Google Sheets) ===
+    // ==================================================================
+    let PROMOCIONES = [];
+    let promoSeleccionadaActual = null;
+    let promoFechasResueltas = null;
+
+    async function cargarPromociones() {
+        const container = document.getElementById('promo-cards-container');
+        if (!container) return;
+        try {
+            const resp = await fetch(`${APPS_SCRIPT_URL}?action=getPromociones`);
+            const data = await resp.json();
+            if (data.error || !data.promociones) throw new Error(data.error || 'Respuesta invalida de promociones');
+            PROMOCIONES = data.promociones;
+
+            if (PROMOCIONES.length === 0) {
+                container.innerHTML = `<p class="col-span-3 text-center text-slate-500 py-8">No hay promociones activas en este momento.</p>`;
+                return;
+            }
+
+            container.innerHTML = PROMOCIONES.map(promo => {
+                const boton = promo.duplex
+                    ? `<button onclick="iniciarReservaPromo('${promo.id}')" class="w-full mt-3 bg-teal-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors">Reservar esta promo</button>`
+                    : `<a href="https://wa.me/${HOTEL_PHONE_NUMBER}?text=${encodeURIComponent('¡Hola! Quiero consultar por la promo: ' + promo.titulo)}" target="_blank" class="block w-full mt-3 bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-center">Consultar por WhatsApp</a>`;
+
+                return `
+                    <article class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all p-6 flex flex-col justify-between">
+                        <div>
+                            <span class="inline-block bg-teal-50 text-teal-700 text-xs font-semibold px-2.5 py-1 rounded-md mb-3 border border-teal-100">${promo.condiciones}</span>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2">${promo.titulo}</h3>
+                            <p class="text-slate-600 text-sm mb-4">${promo.descripcion}</p>
+                            <div class="bg-slate-50 rounded-lg p-3 mb-2 border border-slate-100">
+                                <span class="text-xs text-slate-500 block">Precio total</span>
+                                <span class="text-lg font-extrabold text-teal-800">${formatCurrency(promo.precioTotal)}</span>
+                            </div>
+                        </div>
+                        ${boton}
+                    </article>
+                `;
+            }).join('');
+        } catch (err) {
+            console.error('No se pudieron cargar las promociones:', err);
+            container.innerHTML = `<p class="col-span-3 text-center text-slate-400 py-8">Consultá promociones vigentes por WhatsApp.</p>`;
+        }
+    }
+
+    // Chequea si un rango [inicio, fin) se superpone con algun periodo bloqueado.
+    function rangoSuperpone(inicio, fin, blockedPeriods) {
+        for (const period of blockedPeriods) {
+            if (inicio <= period.end && fin >= period.start) return true;
+        }
+        return false;
+    }
+
+    // Busca, dia por dia (o solo viernes si la promo es de fin de semana),
+    // la proxima fecha con disponibilidad real en alguno de los duplex candidatos.
+    async function buscarProximaFechaDisponible(duplexKeys, noches, soloViernes) {
+        for (const k of duplexKeys) {
+            if (!BLOCKED_DATES[k] || BLOCKED_DATES[k].length === 0) {
+                await cargarFechasOcupadas(k);
+            }
+        }
+        let intento = new Date(hoyReserva);
+        intento.setUTCDate(intento.getUTCDate() + 1);
+
+        for (let i = 0; i < 90; i++) {
+            if (soloViernes && intento.getUTCDay() !== 5) {
+                intento.setUTCDate(intento.getUTCDate() + 1);
+                continue;
+            }
+            const checkOut = new Date(intento.getTime() + noches * 86400000);
+            for (const k of duplexKeys) {
+                if (!rangoSuperpone(intento, checkOut, BLOCKED_DATES[k] || [])) {
+                    return { duplex: k, checkIn: new Date(intento), checkOut: checkOut };
+                }
+            }
+            intento.setUTCDate(intento.getUTCDate() + (soloViernes ? 7 : 1));
+        }
+        return null;
+    }
+
+    async function iniciarReservaPromo(promoId) {
+        const promo = PROMOCIONES.find(p => p.id === promoId);
+        if (!promo || !promo.duplex) return;
+
+        const duplexCandidatos = promo.duplex === 'ambos' ? ['duplex2', 'duplex3'] : [promo.duplex];
+        const resultado = await buscarProximaFechaDisponible(duplexCandidatos, promo.noches || 1, promo.weekend);
+
+        if (!resultado) {
+            alert('No encontramos fechas disponibles cercanas para esta promo. Escribinos por WhatsApp para coordinar.');
+            return;
+        }
+
+        promoSeleccionadaActual = promo;
+        promoFechasResueltas = resultado;
+
+        const nombreDuplex = DUPLEX_CONFIG[resultado.duplex] ? DUPLEX_CONFIG[resultado.duplex].name : resultado.duplex;
+        document.getElementById('promo-modal-titulo').textContent = promo.titulo;
+        document.getElementById('promo-modal-fechas').textContent =
+            `${nombreDuplex} · ${resultado.checkIn.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} a ${resultado.checkOut.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} (${promo.noches} ${promo.noches === 1 ? 'noche' : 'noches'})`;
+
+        const montoSenaPreview = Math.round(promo.precioTotal * 0.70);
+        document.getElementById('promo-modal-precio').textContent =
+            `Total: ${formatCurrency(promo.precioTotal)} · Seña (70%): ${formatCurrency(montoSenaPreview)}`;
+
+        document.getElementById('promo-nombre').value = '';
+        document.getElementById('promo-apellido').value = '';
+        document.getElementById('promo-telefono').value = '';
+        document.getElementById('promo-email').value = '';
+
+        const modal = document.getElementById('promo-modal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function cerrarPromoModal() {
+        const modal = document.getElementById('promo-modal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    async function confirmarReservaPromo() {
+        const nombre = document.getElementById('promo-nombre').value.trim();
+        const apellido = document.getElementById('promo-apellido').value.trim();
+        const telefono = document.getElementById('promo-telefono').value.trim();
+        const email = document.getElementById('promo-email').value.trim();
+
+        if (!nombre || !apellido || !telefono) {
+            alert('Completá nombre, apellido y celular para continuar.');
+            return;
+        }
+
+        const btn = document.getElementById('promo-modal-confirmar');
+        const textoOriginal = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Generando link de pago...';
+
+        try {
+            const montoSena = Math.round(promoSeleccionadaActual.precioTotal * 0.70);
+            const params = new URLSearchParams({
+                duplex: promoFechasResueltas.duplex,
+                action: 'crearPreferencia',
+                checkin: promoFechasResueltas.checkIn.toISOString().slice(0, 10),
+                checkout: promoFechasResueltas.checkOut.toISOString().slice(0, 10),
+                nombre: nombre,
+                apellido: apellido,
+                email: email,
+                telefono: telefono,
+                montoSena: montoSena,
+                montoTotal: promoSeleccionadaActual.precioTotal
+            });
+            const resp = await fetch(`${APPS_SCRIPT_URL}?${params.toString()}`);
+            const data = await resp.json();
+            if (data.error || !data.initPoint) {
+                alert('No pudimos generar el link de pago. Por favor, escribinos por WhatsApp.');
+                btn.disabled = false;
+                btn.textContent = textoOriginal;
+                return;
+            }
+            window.location.href = data.initPoint;
+        } catch (err) {
+            console.error('Error creando el pago de la promo:', err);
+            alert('No pudimos conectar con Mercado Pago. Por favor, escribinos por WhatsApp.');
+            btn.disabled = false;
+            btn.textContent = textoOriginal;
+        }
     }
     const HOTEL_PHONE_NUMBER = '5493786410535';
     const TOWEL_DISCOUNT_PER_BED = 2000;
@@ -317,7 +519,7 @@
     function calculateQuote() { const summaryContainer = document.getElementById('quote-summary'); const priceComponents = calculatePriceComponents(); if (!priceComponents) { summaryContainer.innerHTML = `<p class="text-red-500">Faltan datos para la cotización.</p>`; return; } bookingState.quote = priceComponents; const { total, longStayDiscount, padelCost, lateCheckoutCost, towelDiscount, nights, isPromoEligible, standardPricePerNight, promoBaseRate, config } = priceComponents; const { guests, babies, pets, vehicles, checkIn, checkOut, lateCheckout } = bookingState; const freePadelHours = nights >= 5 && !isPromoEligible ? nights : 0; const isPromoWeekendOnly = isPromoEligible && nights === 2; let checkOutTime = "12:00 hs"; if (lateCheckout) { checkOutTime = "18:00 hs"; } else if (isPromoWeekendOnly) { checkOutTime = "18:00 hs (Promo)"; } let guestText = `${guests} Adultos/Niños`; if (babies > 0) { guestText += ` + ${babies} ${babies === 1 ? 'bebé' : 'bebés'} (sin cargo)`; } let summaryHTML = `<div class="p-4 bg-slate-50 rounded-lg border"><p class="font-bold text-lg mb-2">${config.name}</p><p><strong>Check-in:</strong> ${checkIn.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} - 09:00 hs</p><p><strong>Check-out:</strong> ${checkOut.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} - ${checkOutTime}</p><p class="mt-2"><strong>Huéspedes:</strong> ${guestText}</p><p><strong>Mascotas:</strong> ${pets.charAt(0).toUpperCase() + pets.slice(1)} | <strong>Vehículo:</strong> ${vehicles.charAt(0).toUpperCase() + vehicles.slice(1)}</p></div>`; if (isPromoWeekendOnly) { summaryHTML += `<div class="mt-4 p-3 bg-amber-100 border border-amber-200 text-amber-800 rounded-lg text-center font-semibold">¡Promo Finde 3x2 Aplicada!</div>`; } summaryHTML += `<div class="border-t my-4"></div>`; if (isPromoWeekendOnly) { const promoSubtotal = promoBaseRate * 3; const promoDiscount = promoBaseRate; summaryHTML += `<div class="flex justify-between"><span>Total Estadía (3 días, 2 noches)</span><span class="font-medium">${formatCurrency(promoSubtotal)}</span></div>`; summaryHTML += `<div class="flex justify-between text-green-600"><span>Descuento Promo 3x2 (1 noche)</span><span class="font-medium">-${formatCurrency(promoDiscount)}</span></div>`; } else if (isPromoEligible) { const promoPackageCost = 2 * promoBaseRate; summaryHTML += `<div class="flex justify-between"><span>Paquete Promo Finde (2 noches)</span><span class="font-medium">${formatCurrency(promoPackageCost)}</span></div>`; const remainingNights = nights - 2; if (remainingNights > 0) { const additionalNightsCost = remainingNights * standardPricePerNight; summaryHTML += `<div class="flex justify-between text-sm text-slate-500 pl-2"><span>${remainingNights} noche(s) adicional(es) para ${guests}p</span><span class="font-medium">${formatCurrency(additionalNightsCost)}</span></div>`; } } else { summaryHTML += `<div class="flex justify-between"><span>Alojamiento (${nights} ${nights === 1 ? 'noche' : 'noches'})</span><span class="font-medium">${formatCurrency(priceComponents.accommodationCost)}</span></div>`; summaryHTML += `<div class="flex justify-between text-sm text-slate-500 pl-2"><span>Tarifa por noche</span><span class="font-medium">${formatCurrency(standardPricePerNight)}</span></div>`; } summaryHTML += `${longStayDiscount > 0 ? `<div class="flex justify-between text-green-600 pl-2"><span>Descuento +7 noches (10%)</span><span class="font-medium">-${formatCurrency(longStayDiscount)}</span></div>` : ''}${towelDiscount > 0 ? `<div class="flex justify-between text-green-600 pl-2"><span>Descuento Sábanas/Toallones</span><span class="font-medium">-${formatCurrency(towelDiscount)}</span></div>` : ''}<div class="border-t my-2"></div>${freePadelHours > 0 ? `<div class="flex justify-between text-green-600"><span>Promo: ${freePadelHours}hs de Pádel</span><span class="font-medium">GRATIS</span></div>` : ''}${padelCost > 0 ? `<div class="flex justify-between"><span>Pádel Adicional (${padelHours}hs)</span><span class="font-medium">${formatCurrency(padelCost)}</span></div>` : ''}${lateCheckoutCost > 0 ? `<div class="flex justify-between"><span>Adicional Salida Extendida</span><span class="font-medium">${formatCurrency(lateCheckoutCost)}</span></div>` : ''}<div class="border-t my-4"></div><div class="flex justify-between text-xl font-bold"><span>TOTAL</span><span>${formatCurrency(total)}</span></div>`; let policiesHTML = ''; if (checkIn.getUTCFullYear() > ANIO_ACTUAL) { policiesHTML += `<li class="text-sm">Pagando el 100% al reservar, se <strong>congela la tarifa ${ANIO_ACTUAL}</strong> para tu estadía en ${checkIn.getUTCFullYear()}.</li>`; } policiesHTML += `<li class="text-sm">La reserva se confirma con un adelanto del <strong>70%</strong>. El 30% restante se ajusta a la tarifa vigente al momento del check-in.</li>`; summaryHTML += `<div class="mt-4 p-3 bg-teal-50 border border-teal-200 rounded-lg"><h4 class="font-semibold text-teal-800">Políticas de Pago</h4><ul class="list-disc list-inside text-teal-700">${policiesHTML}</ul></div>`; summaryContainer.innerHTML = summaryHTML; updateMobileFooter(); }
     function preparePayment() { const { total, config, nights, isPromoEligible } = bookingState.quote; const { checkIn, checkOut, guests, babies, pets, vehicles, firstName, lastName, phone, lateCheckout } = bookingState; const advanceAmount = total * 0.70; const totalAmount = total; const transferInfo = document.getElementById('transfer-amount-info'); let transferHTML = `<p><b>Adelanto (70%):</b> ${formatCurrency(advanceAmount)}</p>`; if (checkIn.getUTCFullYear() > ANIO_ACTUAL) { transferHTML += `<div class="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-md"><h4 class="font-bold text-emerald-800">¡Asegurá y Ahorrá!</h4><p class="text-sm text-emerald-700">Pagá el <b>Total (100%): ${formatCurrency(totalAmount)}</b> y congelá la tarifa ${ANIO_ACTUAL} para tus vacaciones ${checkIn.getUTCFullYear()}.</p></div>`; } transferInfo.innerHTML = transferHTML; const mpInfo = document.getElementById('mp-amount-info'); if (mpInfo) { mpInfo.textContent = `Seña a pagar: ${formatCurrency(advanceAmount)}`; } const promoText = isPromoEligible ? '\n- PROMO FINDE APLICADA' : ''; const towelText = bookingState.bringOwnTowels ? '\n- Ahorro sábanas/toallones' : ''; let guestText = `${guests} Adultos/Niños`; if (babies > 0) { guestText += ` + ${babies} ${babies === 1 ? 'bebé' : 'bebés'}`; } let emailText = (bookingState.sendEmail && bookingState.email) ? `\n- Enviar copia a: ${bookingState.email}` : ''; const isPromoWeekendOnly = isPromoEligible && nights === 2; let checkOutTime = "12:00 hs"; if (lateCheckout) { checkOutTime = "18:00 hs"; } else if (isPromoWeekendOnly) { checkOutTime = "18:00 hs"; } const whatsappMessage = `¡Hola! Quiero confirmar mi reserva y enviar el comprobante de pago.\n*Datos del Huésped:*\n- Nombre: ${firstName} ${lastName}\n- Celular: ${phone}${emailText}\n*Detalles de la Reserva:*${promoText}${towelText}\n- Dúplex: ${config.name}\n- Check-in: ${checkIn.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} - 09:00 hs\n- Check-out: ${checkOut.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} - ${checkOutTime}\n- Noches: ${nights}\n- Huéspedes: ${guestText}\n- Mascotas: ${pets.charAt(0).toUpperCase() + pets.slice(1)}\n- Vehículo: ${vehicles.charAt(0).toUpperCase() + vehicles.slice(1)}\n- Total cotizado: ${formatCurrency(total)}\n*Adjunto el comprobante del pago (70% o 100%).*\n¡Gracias!`; const whatsappUrl = `https://wa.me/${HOTEL_PHONE_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`; document.getElementById('whatsapp-button').onclick = () => window.open(whatsappUrl, '_blank'); }
     function contactForCardPayment() { const { total, config } = bookingState.quote; const { firstName, lastName } = bookingState; const message = `¡Hola! Estoy interesado/a en abonar mi reserva para el ${config.name} con tarjeta de crédito. Mi nombre es ${firstName} ${lastName} y el total es de ${formatCurrency(total)}. ¿Podrían enviarme el link de pago? ¡Gracias!`; const whatsappUrl = `https://wa.me/${HOTEL_PHONE_NUMBER}?text=${encodeURIComponent(message)}`; window.open(whatsappUrl, '_blank'); }
-    document.addEventListener('DOMContentLoaded', () => { asegurarTarifas(); const footerYearEl = document.getElementById('footer-year'); if (footerYearEl) footerYearEl.textContent = ANIO_ACTUAL; document.getElementById('promo-badge').classList.remove('hidden'); attachEventListeners(); updateProgressBar(); new Swiper(".swiper-duplex2", { loop: true, autoplay: { delay: 4000, disableOnInteraction: false }, pagination: { el: ".swiper-duplex2 .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-duplex2 .swiper-button-next", prevEl: ".swiper-duplex2 .swiper-button-prev" } }); new Swiper(".swiper-duplex3", { loop: true, autoplay: { delay: 4500, disableOnInteraction: false }, pagination: { el: ".swiper-duplex3 .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-duplex3 .swiper-button-next", prevEl: ".swiper-duplex3 .swiper-button-prev" } }); new Swiper(".swiper-common", { loop: true, autoplay: { delay: 5000, disableOnInteraction: false }, pagination: { el: ".swiper-common .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-common .swiper-button-next", prevEl: ".swiper-common .swiper-button-prev" } }); });
+    document.addEventListener('DOMContentLoaded', () => { asegurarTarifas(); cargarPromociones(); const promoModalConfirmarBtn = document.getElementById('promo-modal-confirmar'); if (promoModalConfirmarBtn) promoModalConfirmarBtn.addEventListener('click', confirmarReservaPromo); const footerYearEl = document.getElementById('footer-year'); if (footerYearEl) footerYearEl.textContent = ANIO_ACTUAL; document.getElementById('promo-badge').classList.remove('hidden'); attachEventListeners(); updateProgressBar(); new Swiper(".swiper-duplex2", { loop: true, autoplay: { delay: 4000, disableOnInteraction: false }, pagination: { el: ".swiper-duplex2 .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-duplex2 .swiper-button-next", prevEl: ".swiper-duplex2 .swiper-button-prev" } }); new Swiper(".swiper-duplex3", { loop: true, autoplay: { delay: 4500, disableOnInteraction: false }, pagination: { el: ".swiper-duplex3 .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-duplex3 .swiper-button-next", prevEl: ".swiper-duplex3 .swiper-button-prev" } }); new Swiper(".swiper-common", { loop: true, autoplay: { delay: 5000, disableOnInteraction: false }, pagination: { el: ".swiper-common .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-common .swiper-button-next", prevEl: ".swiper-common .swiper-button-prev" } }); });
     </script>
 </body>
 </html>
