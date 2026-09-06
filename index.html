@@ -120,14 +120,14 @@
         }
 
         /* --- Botón flotante de WhatsApp --- */
-        .wa-fab { position: fixed; right: 18px; bottom: 18px; z-index: 30; display: flex; align-items: center; justify-content: center; height: 56px; width: 56px; border-radius: 999px; background: #25d366; color: #fff; box-shadow: 0 10px 26px -8px rgba(18,120,72,.55); transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out), background-color .18s var(--ease-out), width .28s var(--ease-out); overflow: hidden; }
+        .wa-fab { position: fixed; left: 18px; bottom: 18px; z-index: 30; display: flex; align-items: center; justify-content: center; height: 56px; width: 56px; border-radius: 999px; background: #25d366; color: #fff; box-shadow: 0 10px 26px -8px rgba(18,120,72,.55); transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out), background-color .18s var(--ease-out), width .28s var(--ease-out); overflow: hidden; }
         .wa-fab svg { width: 30px; height: 30px; flex: none; }
         .wa-fab__label { max-width: 0; opacity: 0; white-space: nowrap; font-weight: 600; font-size: .95rem; transition: max-width .28s var(--ease-out), opacity .18s var(--ease-out), margin .28s var(--ease-out); }
         .wa-fab:hover { background: #1ebe5d; transform: translateY(-2px); box-shadow: 0 14px 32px -8px rgba(18,120,72,.65); }
         .wa-fab:active { transform: translateY(0); }
         .wa-fab:focus-visible { outline: 3px solid #25d366; outline-offset: 3px; }
         @media (min-width: 768px) {
-            .wa-fab { right: 24px; bottom: 24px; }
+            .wa-fab { left: 24px; bottom: 24px; }
             .wa-fab:hover, .wa-fab:focus-visible { width: 18.5rem; }
             .wa-fab:hover .wa-fab__label, .wa-fab:focus-visible .wa-fab__label { max-width: 15rem; opacity: 1; margin-left: 10px; }
         }
