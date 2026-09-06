@@ -3,97 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Las Ánforas Apart Hotel & Padel - Tu Escapada Perfecta en Ituzaingó</title>
+    <title>Las Ánforas · Apart &amp; Pádel en Ituzaingó, Corrientes</title>
+    <link rel="icon" type="image/png" href="logo-anfora.png">
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Reserva tu estadía en Las Ánforas, apart hotel con cancha de pádel en Ituzaingó, Corrientes. Dúplex cómodos y seguros para una escapada perfecta.">
+    <meta name="description" content="Dúplex tranquilos y equipados en Ituzaingó, Corrientes, a tres cuadras de la playa del Paraná. Complejo cerrado, cancha de pádel y reserva directa online.">
     <meta name="keywords" content="apart hotel ituzaingó, alquiler ituzaingó corrientes, cabañas con pádel, alojamiento en ituzaingó, las anforas apart, vacaciones en corrientes">
 
     <!-- Open Graph Meta Tags (for social media sharing) -->
-    <meta property="og:title" content="Las Ánforas Apart Hotel & Padel">
-    <meta property="og:description" content="Reserva tu estadía en un lugar cómodo, seguro y tranquilo. ¡Tu escapada perfecta te espera!">
-    <meta property="og:image" content="playa.jpg">
-    <meta property="og:url" content="https://your-domain.com/"> <!-- UPDATE THIS WITH YOUR DOMAIN -->
+    <meta property="og:title" content="Las Ánforas · Apart &amp; Pádel en Ituzaingó">
+    <meta property="og:description" content="Naturaleza, playa y descanso en Ituzaingó. Dúplex cómodos en complejo cerrado, a pasos de la costa del Paraná.">
+    <meta property="og:image" content="ituza-1.jpg">
+    <meta property="og:url" content="https://lasanforas.com/">
     <meta property="og:type" content="website">
 
+    <script>
+      /* Piso seguro de animación: sólo se habilita el estado oculto si el usuario no pidió menos movimiento */
+      try {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+          document.documentElement.classList.add('anim-ready');
+        }
+      } catch (e) {}
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Re-tema del sitio actual: se sobrescriben las escalas que el sitio ya usa
+      // (teal / slate / stone) con una paleta más serena — agua del Paraná, arena,
+      // carbón cálido. green/amber/red/emerald quedan intactas (éxito/aviso/error).
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Figtree', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+              brand: ['Spectral', 'Georgia', 'Cambria', 'serif'],
+            },
+            colors: {
+              teal: {
+                50:'#eef5f2', 100:'#d7e8e1', 200:'#b1d1c5', 300:'#84b3a3',
+                400:'#5a9280', 500:'#3f7a68', 600:'#2f6d5c', 700:'#265a4c',
+                800:'#20493f', 900:'#1b3c34',
+              },
+              slate: {
+                50:'#f7f6f3', 100:'#efece7', 200:'#e1ddd4', 300:'#c9c3b6',
+                400:'#a49d8e', 500:'#7e776a', 600:'#5f5849', 700:'#48423a',
+                800:'#332f28', 900:'#211e19',
+              },
+              stone: {
+                50:'#faf8f3', 100:'#f3efe6', 200:'#e8e1d2', 300:'#d9cdb6',
+                400:'#bcac8d', 500:'#9a8a6b', 600:'#7a6d54', 700:'#5d5342',
+                800:'#413a2f', 900:'#2b2720',
+              },
+            },
+          },
+        },
+      };
+    </script>
+
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="ituza-1.jpg">
+    <link rel="preload" as="image" href="ituza-2.jpg">
+    <link rel="preload" as="image" href="ituza-3.jpg">
     <style>
+        :root {
+            --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+            --shadow-soft: 0 1px 2px rgba(43, 39, 32, 0.04), 0 12px 32px -12px rgba(32, 73, 63, 0.16);
+            --shadow-lift: 0 2px 4px rgba(43, 39, 32, 0.05), 0 24px 48px -20px rgba(32, 73, 63, 0.24);
+        }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', sans-serif; }
-        .font-brand { font-family: 'Playfair Display', serif; }
+        body { font-family: 'Figtree', system-ui, sans-serif; }
+        .font-brand { font-family: 'Spectral', Georgia, serif; font-weight: 500; letter-spacing: -0.012em; }
+        h1, h2, h3 { text-wrap: balance; }
+        p { text-wrap: pretty; }
+        section[id] { scroll-margin-top: 88px; }
+
+        /* --- Chrome de marketing (piezas propias del rediseño) --- */
+        .site-header { transition: box-shadow .3s var(--ease-out), background-color .3s var(--ease-out); }
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; left: 0; right: 100%; bottom: -4px; height: 1.5px; background: currentColor; transition: right .3s var(--ease-out); }
+        .nav-link:hover::after, .nav-link:focus-visible::after { right: 0; }
+        .btn-primary { transition: background-color .2s var(--ease-out), transform .12s var(--ease-out), box-shadow .2s var(--ease-out); }
+        .btn-primary:hover { box-shadow: 0 10px 24px -12px rgba(32,73,63,.55); }
+        .btn-primary:active { transform: translateY(1px); }
+        .card-soft { box-shadow: var(--shadow-soft); transition: box-shadow .3s var(--ease-out), transform .3s var(--ease-out); }
+        .card-soft:hover { box-shadow: var(--shadow-lift); }
+        .hero { position: relative; background-color: #14322b; }
+        .hero-slides { position: absolute; inset: 0; overflow: hidden; }
+        .hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center 58%; opacity: 0; transition: opacity 1200ms var(--ease-out); }
+        .hero-slide.is-active { opacity: 1; }
+        .hero-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(23,52,45,.46) 0%, rgba(23,52,45,.24) 38%, rgba(23,52,45,.34) 62%, rgba(20,44,38,.72) 100%); }
+        .hero h1, .hero p, .hero .uppercase { text-shadow: 0 1px 24px rgba(16,36,31,.35); }
+        @media (prefers-reduced-motion: reduce) { .hero-slide { transition: none; } }
+        .hero-grain { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"); mix-blend-mode: overlay; opacity: .10; }
+        .rule { height: 1px; background: linear-gradient(90deg, transparent, rgba(95,88,73,.28), transparent); }
+
+        /* --- Clases que el JS del cotizador toca: mismo comportamiento, paleta nueva --- */
         .step-transition { transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; }
         .step-hidden { opacity: 0; transform: translateY(20px); position: absolute; width: 100%; pointer-events: none; }
         .calendar-day { transition: all 0.2s ease-in-out; }
-        .calendar-day:not(.disabled):hover { background-color: #14b8a6; color: white; transform: scale(1.1); }
-        .selected { background-color: #0f766e; color: white; border-radius: 50%; }
-        .in-range { background-color: #ccfbf1; color: #134e4a; border-radius: 0; }
-        .start-range { background-color: #0f766e; color: white; border-top-left-radius: 50%; border-bottom-left-radius: 50%; }
-        .end-range { background-color: #0f766e; color: white; border-top-right-radius: 50%; border-bottom-right-radius: 50%; }
-        .disabled { color: #a8a29e; cursor: not-allowed; background-color: #f5f5f4; text-decoration: line-through; }
-        .hero-bg { background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('playa.jpg'); background-size: cover; background-position: center; }
+        .calendar-day:not(.disabled):hover { background-color: #3f7a68; color: white; transform: scale(1.08); }
+        .selected { background-color: #2f6d5c; color: white; border-radius: 50%; }
+        .in-range { background-color: #d7e8e1; color: #20493f; border-radius: 0; }
+        .start-range { background-color: #2f6d5c; color: white; border-top-left-radius: 50%; border-bottom-left-radius: 50%; }
+        .end-range { background-color: #2f6d5c; color: white; border-top-right-radius: 50%; border-bottom-right-radius: 50%; }
+        .disabled { color: #a49d8e; cursor: not-allowed; background-color: #f3efe7; text-decoration: line-through; }
         .swiper-button-next, .swiper-button-prev { color: white !important; }
         .swiper-pagination-bullet-active { background: white !important; }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-150%); } }
-        .marquee-text { animation: marquee 30s linear infinite; }
+
+        /* --- Reveal con piso seguro: visible por defecto; sólo se oculta con JS + sin reduce-motion --- */
+        @media (prefers-reduced-motion: no-preference) {
+            html.anim-ready .reveal { opacity: 0; transform: translateY(18px); }
+            html.anim-ready .reveal.is-in { opacity: 1; transform: none; transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
+        }
     </style>
 </head>
 <body class="bg-stone-50 text-slate-800 antialiased">
 
-    <!-- Header -->
-    <header class="bg-white/90 backdrop-blur-lg fixed top-0 left-0 right-0 z-50 shadow-sm">
+    <!-- Header — visible desde el primer scroll -->
+    <header class="site-header bg-stone-50/85 backdrop-blur-md fixed top-0 left-0 right-0 z-50 border-b border-slate-200/70">
         <div class="container mx-auto max-w-6xl px-4">
-            <div class="flex justify-between items-center py-2">
-                <a href="#"><img src="image_9edd27.png" alt="Logo Las Ánforas" class="h-16 w-auto"></a>
-                <a href="#reservar" class="bg-teal-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-teal-700 transition-colors">Reservar</a>
+            <div class="flex justify-between items-center h-[68px] gap-4">
+                <a href="#" class="flex items-center gap-3 shrink-0" aria-label="Las Ánforas, inicio">
+                    <img src="logo-anfora.png" alt="" class="h-11 w-auto" aria-hidden="true">
+                    <span class="flex flex-col leading-none">
+                        <span class="font-brand text-[1.6rem] md:text-[1.9rem] text-slate-900" style="font-weight:600;">Las Ánforas</span>
+                        <span class="text-[0.62rem] md:text-[0.66rem] uppercase tracking-[0.22em] text-slate-500 mt-1">Apart &amp; Pádel · Ituzaingó</span>
+                    </span>
+                </a>
+                <nav class="hidden md:flex items-center gap-9 text-[0.95rem] text-slate-600">
+                    <a href="#alojamiento" class="nav-link hover:text-slate-900 transition-colors">Alojamiento</a>
+                    <a href="#promociones" class="nav-link hover:text-slate-900 transition-colors">Promociones</a>
+                    <a href="#ubicacion" class="nav-link hover:text-slate-900 transition-colors">Ubicación</a>
+                    <a href="#reservar" class="btn-primary bg-teal-600 text-white font-semibold py-2.5 px-6 rounded-full hover:bg-teal-700">Reservar</a>
+                </nav>
+                <details class="md:hidden relative">
+                    <summary class="list-none flex items-center gap-2 cursor-pointer select-none text-slate-700 py-2 px-3 -mr-3 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+                        <span class="sr-only">Menú</span>
+                    </summary>
+                    <div class="absolute right-0 mt-2 w-52 bg-white rounded-xl border border-slate-200 shadow-lg py-2 text-slate-700">
+                        <a href="#alojamiento" class="block px-4 py-2.5 hover:bg-stone-100">Alojamiento</a>
+                        <a href="#promociones" class="block px-4 py-2.5 hover:bg-stone-100">Promociones</a>
+                        <a href="#ubicacion" class="block px-4 py-2.5 hover:bg-stone-100">Ubicación</a>
+                        <a href="#reservar" class="block mx-3 mt-2 text-center bg-teal-600 text-white font-semibold py-2.5 rounded-full">Reservar</a>
+                    </div>
+                </details>
             </div>
         </div>
     </header>
 
-    <main class="pt-20 pb-24 md:pb-0">
-        <div class="bg-teal-700 text-white py-2 overflow-x-hidden"><p class="marquee-text whitespace-nowrap text-sm font-semibold"><span class="mx-8">*** PROMO 3x2 FINES DE SEMANA: VENÍ 3 DÍAS Y PAGÁ SÓLO 2 ***</span><span class="mx-8">*** RESERVAS ANTICIPADAS: ¡APROVECHÁ LAS TARIFAS VIGENTES! ***</span><span class="mx-8">*** +7 DÍAS 10% DE DESCUENTO ***</span><span class="mx-8">*** +5 NOCHES 1 HORA DE PÁDEL GRATIS POR DÍA ***</span></p></div>
-        <section class="hero-bg text-white pt-20 pb-20 text-center"><div class="container mx-auto max-w-4xl px-4"><h1 class="text-4xl md:text-6xl font-brand leading-tight">Tu Escapada Perfecta</h1><p class="mt-4 text-lg md:text-xl text-slate-200">Disfruta de la comodidad de nuestros dúplex, juega al pádel y vive una experiencia inolvidable.</p><a href="#reservar" class="mt-8 inline-block bg-white text-teal-600 font-bold py-3 px-8 rounded-lg text-lg hover:bg-slate-100 transition-colors">¡Reservar Ahora!</a></div></section>
+    <main class="pt-[68px] pb-24 md:pb-0">
+        <!-- Franja de beneficios — estática, discreta -->
+        <div class="bg-teal-800 text-teal-50/95 text-center text-[0.82rem] py-2.5 px-4">
+            <p class="max-w-4xl mx-auto"><span class="font-semibold text-white">Reservá directo:</span> promo 3×2 los fines de semana · 10% en estadías de 7 noches o más · pádel sin cargo desde la 5.ª noche</p>
+        </div>
 
-        <section class="py-16 bg-stone-100">
-            <div class="container mx-auto max-w-6xl px-4">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-brand">Comodidad y Ubicación Privilegiada</h2>
-                    <p class="mt-2 text-slate-500">Todo lo que necesitas, a solo unos pasos.</p>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-8 text-center">
-                    <div class="flex flex-col items-center">
-                        <div class="bg-white p-4 rounded-full shadow-md"><svg class="w-10 h-10 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg></div>
-                        <h3 class="mt-3 font-bold text-lg">Complejo Seguro</h3><p class="text-slate-500 text-sm">Recinto cerrado con cámaras de seguridad para tu tranquilidad.</p>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="bg-white p-4 rounded-full shadow-md"><svg class="w-10 h-10 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>
-                        <h3 class="mt-3 font-bold text-lg">Cerca de Todo</h3><p class="text-slate-500 text-sm">A 3 cuadras de playas, costanera y centro.</p>
-                    </div>
-                    <div class="flex flex-col items-center">
-                        <div class="bg-white p-4 rounded-full shadow-md"><svg class="w-10 h-10 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div>
-                        <h3 class="mt-3 font-bold text-lg">Servicios a 100 mts</h3><p class="text-slate-500 text-sm">Supermercados, farmacias, plazas y restaurantes.</p>
-                    </div>
-                    <div class="flex flex-col items-center col-span-2 md:col-span-1">
-                        <div class="bg-white p-4 rounded-full shadow-md"><svg class="w-10 h-10 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg></div>
-                        <h3 class="mt-3 font-bold text-lg">Tour a Yacyretá</h3><p class="text-slate-500 text-sm">A 400 mts del centro de visitantes para el tour gratuito a la represa.</p>
+        <!-- Hero -->
+        <section class="hero text-white min-h-[82vh] flex items-end" style="min-height:82dvh;">
+            <div class="hero-slides" aria-hidden="true">
+                <div class="hero-slide is-active" style="background-image:url('ituza-1.jpg')"></div>
+                <div class="hero-slide" style="background-image:url('ituza-2.jpg'); background-position:center 42%"></div>
+                <div class="hero-slide" style="background-image:url('ituza-3.jpg'); background-position:center 55%"></div>
+            </div>
+            <div class="hero-scrim" aria-hidden="true"></div>
+            <div class="hero-grain absolute inset-0 pointer-events-none"></div>
+            <div class="container mx-auto max-w-6xl px-4 relative z-10 pb-16 md:pb-24 pt-28">
+                <div class="max-w-2xl reveal">
+                    <p class="text-[0.8rem] uppercase tracking-[0.24em] text-white/80 mb-5">Ituzaingó · Corrientes</p>
+                    <h1 class="font-brand text-[2.15rem] leading-[1.1] sm:text-6xl md:text-[4.1rem] md:leading-[1.05]" style="font-weight:600;">Naturaleza, playa<br>y descanso</h1>
+                    <p class="mt-6 text-lg md:text-xl text-white/90 max-w-xl">Dúplex tranquilos y bien equipados, a tres cuadras de la costa del Paraná. El lugar para bajar un cambio y volver cada verano.</p>
+                    <div class="mt-9 flex flex-wrap items-center gap-x-7 gap-y-3">
+                        <a href="#reservar" class="btn-primary bg-white text-teal-800 font-semibold py-3.5 px-8 rounded-full hover:bg-stone-100 text-[1.02rem]">Consultar disponibilidad</a>
+                        <a href="#alojamiento" class="nav-link text-white/95 font-medium hover:text-white">Ver los dúplex</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="py-16 bg-white">
+        <section class="py-20 md:py-28 bg-stone-50">
             <div class="container mx-auto max-w-6xl px-4">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-brand">Nuestras Promos Especiales</h2>
-                    <p class="mt-2 text-slate-500">Aprovecha nuestras ofertas para una estadía inolvidable.</p>
+                <div class="max-w-2xl mb-14 reveal">
+                    <h2 class="text-3xl md:text-[2.6rem] font-brand text-slate-900">Un lugar tranquilo, con todo a mano</h2>
+                    <p class="mt-4 text-slate-600 text-lg">Ituzaingó es de esos pueblos donde se camina a todos lados. Nosotros quedamos a tres cuadras del río y a un par de la vida del centro.</p>
                 </div>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-stone-100 p-8 rounded-xl text-center shadow-lg border border-stone-200"><h3 class="font-brand text-2xl text-teal-800 mb-2">✨ Promo 3×2 en Finde</h3><p class="text-slate-600">Vení 3 noches y pagá solo 2. <br> Para grupos de hasta 6 personas.</p><a href="#reservar" class="mt-4 inline-block py-2 px-6 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">Reservá ahora</a></div>
-                    <div class="bg-stone-100 p-8 rounded-xl text-center shadow-lg border border-stone-200"><h3 class="font-brand text-2xl text-teal-800 mb-2">🌴 7 Noches con Beneficios</h3><p class="text-slate-600">10% OFF + 1 hora de pádel gratis por día. ¡Ideal para desconectar!</p><a href="#reservar" class="mt-4 inline-block py-2 px-6 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">Reservá tu semana</a></div>
-                    <div class="bg-stone-100 p-8 rounded-xl text-center shadow-lg border border-stone-200"><h3 class="font-brand text-2xl text-teal-800 mb-2">🎾 Promo Estancia Larga</h3><p class="text-slate-600">Reservá más de 5 noches y recibí<br>1 hora de pádel gratis por cada día.</p><a href="#reservar" class="mt-4 inline-block py-2 px-6 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">Ver fechas</a></div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-2">
+                    <div class="reveal border-t border-slate-300/70 pt-6 mt-6 sm:mt-0">
+                        <svg class="w-7 h-7 text-teal-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 5.25-4.5 8.25-8.7 9.6a1.2 1.2 0 0 1-.6 0C7.5 20.25 3 17.25 3 12V6.3c0-.6.36-1.13.9-1.35A18 18 0 0 1 12 3.75a18 18 0 0 1 8.1 1.2c.54.22.9.75.9 1.35Z"/></svg>
+                        <h3 class="mt-4 font-semibold text-slate-900">Complejo cerrado</h3>
+                        <p class="mt-1.5 text-slate-600 text-[0.95rem]">Portón, perímetro cerrado y cámaras. Pensado para venir con chicos y despreocuparse.</p>
+                    </div>
+                    <div class="reveal border-t border-slate-300/70 pt-6 mt-6 sm:mt-0">
+                        <svg class="w-7 h-7 text-teal-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.14-7.5 11.25-7.5 11.25S4.5 17.64 4.5 10.5a7.5 7.5 0 0 1 15 0Z"/></svg>
+                        <h3 class="mt-4 font-semibold text-slate-900">A pasos de la playa</h3>
+                        <p class="mt-1.5 text-slate-600 text-[0.95rem]">Tres cuadras hasta la costanera y las playas del Paraná. El centro, a la vuelta.</p>
+                    </div>
+                    <div class="reveal border-t border-slate-300/70 pt-6 mt-6 lg:mt-0">
+                        <svg class="w-7 h-7 text-teal-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.4a.75.75 0 0 1 .73.57L5.1 7.5m0 0 1.7 7.06a1.5 1.5 0 0 0 1.46 1.14h8.03a1.5 1.5 0 0 0 1.46-1.16l1.48-6.3a.75.75 0 0 0-.73-.92H5.1Zm2.4 12.75a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm9.75 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"/></svg>
+                        <h3 class="mt-4 font-semibold text-slate-900">Todo cerca</h3>
+                        <p class="mt-1.5 text-slate-600 text-[0.95rem]">Supermercado, farmacia, plaza y restaurantes en la misma cuadra. Se puede dejar el auto quieto.</p>
+                    </div>
+                    <div class="reveal border-t border-slate-300/70 pt-6 mt-6 lg:mt-0">
+                        <svg class="w-7 h-7 text-teal-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 21V6.75A1.5 1.5 0 0 1 6 5.25h5.25V21M15 21v-8.25h4.5V21M8.25 9h.75m-.75 3h.75m-.75 3h.75"/></svg>
+                        <h3 class="mt-4 font-semibold text-slate-900">Tour a Yacyretá</h3>
+                        <p class="mt-1.5 text-slate-600 text-[0.95rem]">El centro de visitantes queda a 400 metros. La visita guiada a la represa es gratuita.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-20 md:py-28 bg-white">
+            <div class="container mx-auto max-w-6xl px-4">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14 reveal">
+                    <div class="max-w-xl">
+                        <h2 class="text-3xl md:text-[2.6rem] font-brand text-slate-900">Reservás directo con nosotros</h2>
+                        <p class="mt-4 text-slate-600 text-lg">Sin intermediarios ni comisiones. Estos beneficios están siempre disponibles y el cotizador los aplica solo.</p>
+                    </div>
+                    <a href="#reservar" class="btn-primary shrink-0 bg-teal-600 text-white font-semibold py-3 px-7 rounded-full hover:bg-teal-700">Ir al cotizador</a>
+                </div>
+                <div class="grid md:grid-cols-3 gap-y-10 md:gap-10">
+                    <div class="reveal md:pr-8 md:border-r border-slate-200">
+                        <span class="font-brand text-4xl text-teal-700/60" style="font-weight:600;">01</span>
+                        <h3 class="mt-3 text-xl font-semibold text-slate-900">3×2 los fines de semana</h3>
+                        <p class="mt-2 text-slate-600">Entrás un viernes por dos noches o más y la tercera no se cobra. Sirve para grupos de hasta seis.</p>
+                    </div>
+                    <div class="reveal md:px-8 md:border-r border-slate-200">
+                        <span class="font-brand text-4xl text-teal-700/60" style="font-weight:600;">02</span>
+                        <h3 class="mt-3 text-xl font-semibold text-slate-900">7 noches, 10% menos</h3>
+                        <p class="mt-2 text-slate-600">Las estadías largas tienen descuento sobre el alojamiento, más una hora de pádel sin cargo por día.</p>
+                    </div>
+                    <div class="reveal md:pl-8">
+                        <span class="font-brand text-4xl text-teal-700/60" style="font-weight:600;">03</span>
+                        <h3 class="mt-3 text-xl font-semibold text-slate-900">Pádel desde la 5.ª noche</h3>
+                        <p class="mt-2 text-slate-600">A partir de cinco noches sumás una hora de cancha libre por cada día que te quedás.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -101,12 +246,12 @@
         <!-- ========================================================= -->
         <!-- PROMOCIONES ACTIVAS (leidas en vivo desde Google Sheets)   -->
         <!-- ========================================================= -->
-        <section id="promociones" class="py-16 bg-slate-50 border-t border-b border-slate-200">
+        <section id="promociones" class="py-20 md:py-28 bg-stone-100">
             <div class="container mx-auto max-w-6xl px-4">
-                <div class="text-center mb-10">
-                    <span class="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-100 px-3 py-1 rounded-full">Beneficios y Estadías Especiales</span>
-                    <h2 class="text-3xl font-bold text-slate-900 mt-3 font-brand">Promociones Activas</h2>
-                    <p class="text-slate-600 text-sm mt-1">Precios y condiciones fijas — elegí la que más te convenga.</p>
+                <div class="max-w-2xl mb-12 reveal">
+                    <p class="text-[0.78rem] uppercase tracking-[0.22em] text-teal-700 mb-3">Estadías especiales</p>
+                    <h2 class="text-3xl md:text-[2.6rem] font-brand text-slate-900">Promociones vigentes</h2>
+                    <p class="mt-4 text-slate-600 text-lg">Paquetes con precio y condiciones cerradas. Se actualizan según la temporada; elegí el que mejor te quede.</p>
                 </div>
                 <div id="promo-cards-container" class="grid md:grid-cols-3 gap-6">
                     <p class="col-span-3 text-center text-slate-400 py-8">Cargando promociones vigentes...</p>
@@ -131,13 +276,14 @@
             </div>
         </div>
 
-        <section id="reservar" class="py-20">
+        <section id="reservar" class="py-20 md:py-28 bg-stone-50">
             <div class="container mx-auto max-w-4xl px-4">
-                 <div class="text-center mb-12">
-                    <h2 class="text-4xl font-brand">Calcula tu Tarifa y Reserva</h2>
-                    <p class="mt-2 text-slate-500">Sigue estos simples pasos para asegurar tu lugar en Las Ánforas.</p>
+                 <div class="max-w-2xl mb-10 reveal">
+                    <p class="text-[0.78rem] uppercase tracking-[0.22em] text-teal-700 mb-3">Reservá en minutos</p>
+                    <h2 class="text-3xl md:text-[2.6rem] font-brand text-slate-900">Cotizá tu estadía</h2>
+                    <p class="mt-4 text-slate-600 text-lg">Elegí dúplex y fechas y vas a ver el precio final, con las promos ya aplicadas. La reserva se confirma con una seña del 70%.</p>
                 </div>
-                <main id="booking-app" class="bg-white rounded-2xl shadow-xl p-6 md:p-8 w-full">
+                <div id="booking-app" class="bg-white rounded-2xl card-soft border border-slate-200/80 p-6 md:p-8 w-full">
                     <div id="progress-bar" class="w-full bg-slate-200 rounded-full h-2.5 mb-8"><div id="progress-indicator" class="bg-teal-600 h-2.5 rounded-full" style="width: 16.6%; transition: width 0.5s ease-in-out;"></div></div>
                     <div class="relative min-h-[520px]">
                         <div id="step-1" class="step-transition"><h2 class="text-2xl font-bold mb-1">Elige tu Dúplex</h2><p class="text-slate-500 mb-6">Selecciona dónde te gustaría hospedarte.</p><div class="space-y-4"><div onclick="selectDuplex('duplex3')" class="cursor-pointer border-2 border-slate-200 p-4 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all group"><h3 class="text-lg font-semibold text-slate-900">Dúplex 3 (Hasta 5 personas)</h3><p class="text-slate-600">Ideal para familias o grupos. Cuenta con 2 dormitorios separados para mayor privacidad y comodidad.</p></div><div onclick="selectDuplex('duplex2')" class="cursor-pointer border-2 border-slate-200 p-4 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all group"><div class="flex justify-between items-center"><h3 class="text-lg font-semibold text-slate-900">Dúplex 2 (Hasta 6 personas)</h3><span id="promo-badge" class="hidden bg-amber-100 text-amber-800 text-xs font-medium px-2.5 py-0.5 rounded-full">PROMO FINDE</span></div><p class="text-slate-600 mt-1">Nuestro espacio más amplio, con un dormitorio familiar grande, perfecto para disfrutar todos juntos.</p></div></div></div>
@@ -147,52 +293,95 @@
                         <div id="step-5" class="step-transition step-hidden"><h2 class="text-2xl font-bold mb-1">Tu Cotización</h2><p class="text-slate-500 mb-6">Este es el resumen de tu reserva.</p><div id="quote-summary" class="space-y-2 text-slate-700"></div><div class="mt-8 hidden md:flex justify-between items-center"><button onclick="changeStep(4)" class="text-slate-600 hover:text-slate-900 font-medium">Volver</button><button onclick="preparePayment(); changeStep(6);" class="bg-teal-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-teal-700 transition-colors">Confirmar y Pagar</button></div><div class="text-center mt-4 hidden md:block"><button onclick="resetAndGoToStep(1)" class="text-teal-600 hover:text-teal-800 text-sm font-medium">← Volver a cotizar</button></div></div>
                         <div id="step-6" class="step-transition step-hidden"><h2 class="text-2xl font-bold mb-1">Elige cómo Pagar</h2><p class="text-slate-500 mb-6">Selecciona una opción para confirmar tu reserva.</p><div class="space-y-4"><div class="p-4 bg-teal-50 rounded-lg border-2 border-teal-500"><h3 class="font-semibold text-slate-800">Pagar Seña Online (recomendado)</h3><p class="text-sm text-slate-600 mt-1">Pagá tu seña ahora con tarjeta, dinero en cuenta o transferencia desde Mercado Pago. Tu reserva queda confirmada al instante, sin esperar validación manual.</p><p id="mp-amount-info" class="text-center font-bold text-teal-700 mt-3"></p><button id="mp-pay-button" onclick="pagarConMercadoPago()" class="w-full mt-3 bg-teal-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors">Pagar seña con Mercado Pago</button></div><div class="p-4 bg-stone-50 rounded-lg border"><h3 class="font-semibold text-slate-800">Transferencia Bancaria</h3><p class="text-sm text-slate-600 mt-1">Puedes transferir a los siguientes datos:</p><div class="mt-3 p-3 bg-slate-100 text-left rounded-md space-y-2"><div><span class="font-bold text-slate-800">Alias:</span> <span class="font-mono text-slate-900">lasanforasapart</span></div><div><span class="font-bold text-slate-800">Titular:</span> <span class="font-mono text-slate-900">Alicia Andrea Zalazar</span></div><div><span class="font-bold text-slate-800">Banco:</span> <span class="font-mono text-slate-900">Santander</span></div></div><div id="transfer-amount-info" class="text-center font-bold text-teal-600 mt-3"></div></div><div class="p-4 bg-stone-50 rounded-lg border"><h3 class="font-semibold text-slate-800">Tarjeta de Crédito</h3><p class="text-sm text-slate-600 mt-1">Para abonar con tarjeta y consultar planes de cuotas, contáctanos por WhatsApp y te enviaremos un link de pago seguro.</p><button onclick="contactForCardPayment()" class="w-full mt-3 bg-teal-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors">Contactar por WhatsApp</button></div></div><div class="mt-6 p-3 bg-green-50 border border-green-200 rounded-lg text-center"><p class="text-green-800 font-semibold">¡Importante!</p><p class="text-green-700 text-sm">Si realizaste una transferencia, no olvides enviarnos el comprobante por WhatsApp para hacer efectiva la reserva y enviarte la Factura C.</p><button id="whatsapp-button" class="mt-3 bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600 transition-colors">Avisar Pago por WhatsApp</button></div><div class="mt-6 hidden md:flex items-center justify-center space-x-8"><button onclick="changeStep(5)" class="text-slate-600 hover:text-slate-900 font-medium">← Volver al resumen</button><button onclick="resetAndGoToStep(1)" class="text-teal-600 hover:text-teal-800 font-medium">Cotizar de nuevo →</button></div></div>
                     </div>
-                </main>
+                </div>
             </div>
         </section>
 
-        <section class="py-16 bg-white">
+        <section id="alojamiento" class="py-20 md:py-28 bg-white">
             <div class="container mx-auto max-w-6xl px-4">
-                <div class="text-center mb-12"><h2 class="text-4xl font-brand">Nuestros Dúplex</h2></div>
-                <div class="mb-12">
-                    <h3 class="text-2xl font-bold text-center mb-4">Dúplex 2 (Familiar)</h3>
+                <div class="max-w-2xl mb-14 reveal"><h2 class="text-3xl md:text-[2.6rem] font-brand text-slate-900">Los dúplex</h2><p class="mt-4 text-slate-600 text-lg">Dos unidades independientes dentro del mismo complejo, con cocina completa, ropa de cama y aire. Y una cancha de pádel para cerrar el día.</p></div>
+                <div class="mb-14 reveal">
+                    <h3 class="text-xl font-semibold text-slate-900 mb-4">Dúplex 2 · hasta 6 personas</h3>
                     <div class="swiper swiper-duplex2 rounded-lg shadow-lg"><div class="swiper-wrapper"><div class="swiper-slide"><img src="galeria_duplex2.jpg" alt="Dúplex 2" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="cama_duplex2.jpg" alt="Cama Dúplex 2" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="cucheta_duplex2.jpg" alt="Cuchetas Dúplex 2" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="cocina_duplex2.jpg" alt="Cocina Dúplex 2" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="baño_duplex2.jpg" alt="Baño Dúplex 2" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="palier_duplex2.jpg" alt="Palier Dúplex 2" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="tv_duplex2.jpg" alt="TV Dúplex 2" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="heladera_duplex2.jpg" alt="Heladera Dúplex 2" class="w-full h-96 object-cover"></div></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div><div class="swiper-pagination"></div></div>
                 </div>
-                <div class="mb-12">
-                    <h3 class="text-2xl font-bold text-center mb-4">Dúplex 3 (2 Dormitorios)</h3>
+                <div class="mb-14 reveal">
+                    <h3 class="text-xl font-semibold text-slate-900 mb-4">Dúplex 3 · dos dormitorios, hasta 5 personas</h3>
                     <div class="swiper swiper-duplex3 rounded-lg shadow-lg"><div class="swiper-wrapper"><div class="swiper-slide"><img src="dormitoriogrande_duplex3.jpg" alt="Dormitorio Dúplex 3" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="dormitoriochico_duplex3.jpg" alt="Dormitorio chico Dúplex 3" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="cocina_duplex3.jpg" alt="Cocina Dúplex 3" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="baño_duplex3.jpg" alt="Baño Dúplex 3" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="palier_duplex3.jpg" alt="Palier Dúplex 3" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="tv_duplex3.jpg" alt="TV Dúplex 3" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="utensilio_duplex3.jpg" alt="Utensilios Dúplex 3" class="w-full h-96 object-cover"></div></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div><div class="swiper-pagination"></div></div>
                 </div>
-                <div>
-                    <h3 class="text-2xl font-bold text-center mb-4">Áreas Comunes y Cancha</h3>
+                <div class="reveal">
+                    <h3 class="text-xl font-semibold text-slate-900 mb-4">Patio, parrilla y cancha de pádel</h3>
                     <div class="swiper swiper-common rounded-lg shadow-lg"><div class="swiper-wrapper"><div class="swiper-slide"><img src="cancha.jpg" alt="Cancha de Pádel" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="canchanoche_1.jpg" alt="Cancha de Pádel de Noche" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="patio_general_2.jpg" alt="Patio general" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="patio_noche.jpg" alt="Patio de noche" class="w-full h-96 object-cover"></div><div class="swiper-slide"><img src="condimientos_duplex2.jpg" alt="Condimentos" class="w-full h-96 object-cover"></div></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div><div class="swiper-pagination"></div></div>
                 </div>
             </div>
         </section>
 
-        <section class="py-20 bg-stone-100">
-             <div class="container mx-auto max-w-4xl px-4 text-center">
-                <h2 class="text-4xl font-brand">Lo que Dicen Nuestros Huéspedes</h2>
-                 <div class="mt-10 grid md:grid-cols-2 gap-8"><div class="bg-white p-6 rounded-lg shadow-lg text-left"><div class="flex items-center mb-2"><span class="text-yellow-400">★★★★★</span></div><p class="text-slate-600">"¡Ideal para familias! El dúplex es súper espacioso y cómodo. La ubicación es perfecta, a pasos de la playa y del centro. Pudimos dejar el auto y movernos a pie a todos lados. ¡Volveremos!"</p><p class="mt-4 font-bold text-slate-800">- Familia Ramírez</p></div><div class="bg-white p-6 rounded-lg shadow-lg text-left"><div class="flex items-center mb-2"><span class="text-yellow-400">★★★★★</span></div><p class="text-slate-600">"La comodidad y la seguridad son destacables. El complejo está cerrado y eso nos dio mucha tranquilidad. Además, tener un supermercado a la vuelta de la esquina nos salvó varias veces. ¡100% recomendable!"</p><p class="mt-4 font-bold text-slate-800">- Sofía y Marcos</p></div><div class="bg-white p-6 rounded-lg shadow-lg text-left"><div class="flex items-center mb-2"><span class="text-yellow-400">★★★★★</span></div><p class="text-slate-600">"Excelente ubicación, no usamos el auto en toda la estadía. La playa, los restaurantes, todo cerca. El dúplex impecable y muy bien equipado. La cancha de pádel es un plus genial para terminar el día."</p><p class="mt-4 font-bold text-slate-800">- Grupo de Amigos</p></div><div class="bg-white p-6 rounded-lg shadow-lg text-left"><div class="flex items-center mb-2"><span class="text-yellow-400">★★★★★</span></div><p class="text-slate-600">"Fuimos con nuestros hijos chicos y fue una maravilla. El lugar es muy seguro y tranquilo. La comodidad de tener todo a mano no tiene precio. Alicia, la dueña, súper atenta a todo. ¡Gracias!"</p><p class="mt-4 font-bold text-slate-800">- Luciana V.</p></div><div class="bg-white p-6 rounded-lg shadow-lg text-left md:col-span-2"><div class="flex items-center mb-2"><span class="text-yellow-400">★★★★★</span></div><p class="text-slate-600">"Superó nuestras expectativas. La limpieza, el equipamiento del dúplex y la ubicación son inmejorables. Es el lugar perfecto para descansar y tener todo cerca. El tour a Yacyretá, que está al lado, es imperdible."</p><p class="mt-4 font-bold text-slate-800">- Carlos y Elena</p></div></div>
+        <!-- TODO: reemplazar por reseñas reales de Google / Booking antes de publicar -->
+        <section class="py-20 md:py-28 bg-stone-100">
+             <div class="container mx-auto max-w-5xl px-4">
+                <div class="max-w-2xl mb-14 reveal">
+                    <h2 class="text-3xl md:text-[2.6rem] font-brand text-slate-900">Lo que cuentan quienes ya vinieron</h2>
+                    <p class="mt-4 text-slate-600 text-lg">Casi todos repiten la misma idea: se llega a pie a todos lados y se descansa de verdad.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-x-12 gap-y-12">
+                    <blockquote class="reveal border-t border-slate-300/70 pt-6">
+                        <p class="font-brand text-[1.35rem] leading-snug text-slate-800">"El dúplex es amplio y cómodo, y la ubicación es perfecta: a pasos de la playa y del centro. Dejamos el auto quieto toda la semana."</p>
+                        <footer class="mt-4 text-sm text-slate-500">Familia Ramírez</footer>
+                    </blockquote>
+                    <blockquote class="reveal border-t border-slate-300/70 pt-6">
+                        <p class="font-brand text-[1.35rem] leading-snug text-slate-800">"Que el complejo sea cerrado nos dio mucha tranquilidad para venir con los chicos. Y tener el súper a la vuelta nos salvó varias veces."</p>
+                        <footer class="mt-4 text-sm text-slate-500">Sofía y Marcos</footer>
+                    </blockquote>
+                    <blockquote class="reveal border-t border-slate-300/70 pt-6">
+                        <p class="font-brand text-[1.35rem] leading-snug text-slate-800">"No usamos el auto en toda la estadía. La playa, los restaurantes, todo cerca. El dúplex impecable y bien equipado, y la cancha de pádel un lujo para cerrar el día."</p>
+                        <footer class="mt-4 text-sm text-slate-500">Grupo de amigos</footer>
+                    </blockquote>
+                    <blockquote class="reveal border-t border-slate-300/70 pt-6">
+                        <p class="font-brand text-[1.35rem] leading-snug text-slate-800">"Fuimos con hijos chicos y fue una maravilla. Seguro, tranquilo y con todo a mano. Alicia, la dueña, atenta a cada detalle."</p>
+                        <footer class="mt-4 text-sm text-slate-500">Luciana V.</footer>
+                    </blockquote>
+                    <blockquote class="reveal border-t border-slate-300/70 pt-6 md:col-span-2">
+                        <p class="font-brand text-[1.5rem] leading-snug text-slate-800 max-w-3xl">"Superó lo que esperábamos. Limpieza, equipamiento y ubicación inmejorables. El lugar justo para descansar y tener todo cerca; el tour a Yacyretá, al lado, es imperdible."</p>
+                        <footer class="mt-4 text-sm text-slate-500">Carlos y Elena</footer>
+                    </blockquote>
+                </div>
             </div>
         </section>
 
-        <section id="ubicacion" class="py-20 bg-white">
+        <section id="ubicacion" class="py-20 md:py-28 bg-white">
             <div class="container mx-auto max-w-6xl px-4">
-                <div class="text-center mb-12"><h2 class="text-4xl font-brand">¿Dónde Nos Encontramos?</h2><p class="mt-2 text-slate-500">Estamos en una ubicación privilegiada en Ituzaingó, Corrientes.</p></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div><div class="rounded-lg shadow-xl overflow-hidden"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3554.216388484196!2d-56.69225882485529!3d-27.57317792078025!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9457b3252520623d%3A0x86134b172a44843b!2sPer%C3%BA%201842%2C%20W3302%20Ituzaing%C3%B3%2C%20Corrientes!5e0!3m2!1ses-419!2sar!4v1695780370830!5m2!1ses-419!2sar" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div></div>
-                    <div class="text-center md:text-left"><h3 class="text-2xl font-bold">Dirección</h3><p class="mt-2 text-slate-600 text-lg">Perú 1842, W3302 Ituzaingó, Corrientes, Argentina</p><a href="https://www.google.com/maps/dir/?api=1&destination=Perú+1842,+W3302+Ituzaingó,+Corrientes" target="_blank" class="mt-6 inline-block bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors">Cómo Llegar</a></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center">
+                    <div class="reveal order-2 md:order-1">
+                        <h2 class="text-3xl md:text-[2.6rem] font-brand text-slate-900">Cómo llegar</h2>
+                        <p class="mt-4 text-slate-600 text-lg">Estamos sobre calle Perú, en pleno Ituzaingó, a tres cuadras de la costanera del Paraná y a unas pocas del centro.</p>
+                        <p class="mt-6 text-slate-800 font-medium">Perú 1842, W3302 Ituzaingó</p>
+                        <p class="text-slate-500">Corrientes, Argentina</p>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=Perú+1842,+W3302+Ituzaingó,+Corrientes" target="_blank" rel="noopener" class="btn-primary mt-7 inline-block bg-teal-600 text-white font-semibold py-3 px-7 rounded-full hover:bg-teal-700">Abrir en Google Maps</a>
+                    </div>
+                    <div class="reveal order-1 md:order-2">
+                        <div class="rounded-2xl card-soft overflow-hidden border border-slate-200"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3554.216388484196!2d-56.69225882485529!3d-27.57317792078025!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9457b3252520623d%3A0x86134b172a44843b!2sPer%C3%BA%201842%2C%20W3302%20Ituzaing%C3%B3%2C%20Corrientes!5e0!3m2!1ses-419!2sar!4v1695780370830!5m2!1ses-419!2sar" width="100%" height="420" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa de Las Ánforas en Ituzaingó"></iframe></div>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-slate-800 text-white py-12">
-        <div class="container mx-auto max-w-6xl px-4 text-center">
-            <h2 class="text-3xl font-brand">Las Ánforas</h2>
-            <p class="mt-2 text-slate-400">Vení a descansar a un lugar cómodo, seguro y tranquilo.</p>
-            <div class="mt-4"><a href="#reservar" class="text-teal-400 hover:text-teal-300">Reservar</a><span class="mx-2 text-slate-500">|</span><a href="#ubicacion" class="text-teal-400 hover:text-teal-300">Ubicación</a></div>
-            <p class="text-sm text-slate-500 mt-8">© <span id="footer-year">2025</span> Las Anforas Apart Hotel. Todos los derechos reservados.</p>
+    <footer class="bg-slate-900 text-slate-300 py-16">
+        <div class="container mx-auto max-w-6xl px-4">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+                <div>
+                    <p class="font-brand text-3xl text-white" style="font-weight:600;">Las Ánforas</p>
+                    <p class="mt-2 text-slate-400 max-w-sm">Apart &amp; pádel en Ituzaingó, Corrientes. Un lugar tranquilo, cerrado y cerca de todo para descansar sin apuro.</p>
+                </div>
+                <nav class="flex flex-wrap gap-x-7 gap-y-2 text-sm">
+                    <a href="#alojamiento" class="nav-link hover:text-white transition-colors">Alojamiento</a>
+                    <a href="#promociones" class="nav-link hover:text-white transition-colors">Promociones</a>
+                    <a href="#reservar" class="nav-link hover:text-white transition-colors">Reservar</a>
+                    <a href="#ubicacion" class="nav-link hover:text-white transition-colors">Ubicación</a>
+                    <a href="https://wa.me/5493786410535" target="_blank" rel="noopener" class="nav-link hover:text-white transition-colors">WhatsApp</a>
+                </nav>
+            </div>
+            <div class="rule my-10"></div>
+            <p class="text-xs text-slate-500">© <span id="footer-year">2025</span> Las Ánforas Apart Hotel · Perú 1842, Ituzaingó, Corrientes</p>
         </div>
     </footer>
 
@@ -541,10 +730,51 @@
     function selectDate(date) { if (!bookingState.checkIn || (bookingState.checkIn && bookingState.checkOut)) { bookingState.checkIn = date; bookingState.checkOut = null; } else if (date > bookingState.checkIn) { bookingState.checkOut = date; } else { bookingState.checkIn = date; bookingState.checkOut = null; } const isRangeSelected = bookingState.checkIn && bookingState.checkOut; calendar.dateNextBtn.disabled = !isRangeSelected; mobileNextBtn.disabled = !isRangeSelected; const isPromoWeekendOnly = isRangeSelected && bookingState.checkIn.getUTCDay() === 5 && ((bookingState.checkOut - bookingState.checkIn) / 86400000) === 2; if (isRangeSelected && bookingState.checkOut.getUTCDay() === 0 && !isPromoWeekendOnly) { lateCheckoutContainer.style.display = 'flex'; } else { lateCheckoutContainer.style.display = 'none'; bookingState.lateCheckout = false; lateCheckoutInput.checked = false; } generateCalendar(); updateMobileFooter(); }
     if(calendar.nextBtn) calendar.nextBtn.onclick = () => { calendar.currentDate.setUTCMonth(calendar.currentDate.getUTCMonth() + 1); generateCalendar(); };
     if(calendar.prevBtn) calendar.prevBtn.onclick = () => { calendar.currentDate.setUTCMonth(calendar.currentDate.getUTCMonth() - 1); generateCalendar(); };
-    function calculateQuote() { const summaryContainer = document.getElementById('quote-summary'); const priceComponents = calculatePriceComponents(); if (!priceComponents) { summaryContainer.innerHTML = `<p class="text-red-500">Faltan datos para la cotización.</p>`; return; } bookingState.quote = priceComponents; const { total, longStayDiscount, padelCost, lateCheckoutCost, towelDiscount, nights, isPromoEligible, standardPricePerNight, promoBaseRate, config } = priceComponents; const { guests, babies, pets, vehicles, checkIn, checkOut, lateCheckout } = bookingState; const freePadelHours = nights >= 5 && !isPromoEligible ? nights : 0; const isPromoWeekendOnly = isPromoEligible && nights === 2; let checkOutTime = "12:00 hs"; if (lateCheckout) { checkOutTime = "18:00 hs"; } else if (isPromoWeekendOnly) { checkOutTime = "18:00 hs (Promo)"; } let guestText = `${guests} Adultos/Niños`; if (babies > 0) { guestText += ` + ${babies} ${babies === 1 ? 'bebé' : 'bebés'} (sin cargo)`; } let summaryHTML = `<div class="p-4 bg-slate-50 rounded-lg border"><p class="font-bold text-lg mb-2">${config.name}</p><p><strong>Check-in:</strong> ${checkIn.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} - 09:00 hs</p><p><strong>Check-out:</strong> ${checkOut.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} - ${checkOutTime}</p><p class="mt-2"><strong>Huéspedes:</strong> ${guestText}</p><p><strong>Mascotas:</strong> ${pets.charAt(0).toUpperCase() + pets.slice(1)} | <strong>Vehículo:</strong> ${vehicles.charAt(0).toUpperCase() + vehicles.slice(1)}</p></div>`; if (isPromoWeekendOnly) { summaryHTML += `<div class="mt-4 p-3 bg-amber-100 border border-amber-200 text-amber-800 rounded-lg text-center font-semibold">¡Promo Finde 3x2 Aplicada!</div>`; } summaryHTML += `<div class="border-t my-4"></div>`; if (isPromoWeekendOnly) { const promoSubtotal = promoBaseRate * 3; const promoDiscount = promoBaseRate; summaryHTML += `<div class="flex justify-between"><span>Total Estadía (3 días, 2 noches)</span><span class="font-medium">${formatCurrency(promoSubtotal)}</span></div>`; summaryHTML += `<div class="flex justify-between text-green-600"><span>Descuento Promo 3x2 (1 noche)</span><span class="font-medium">-${formatCurrency(promoDiscount)}</span></div>`; } else if (isPromoEligible) { const promoPackageCost = 2 * promoBaseRate; summaryHTML += `<div class="flex justify-between"><span>Paquete Promo Finde (2 noches)</span><span class="font-medium">${formatCurrency(promoPackageCost)}</span></div>`; const remainingNights = nights - 2; if (remainingNights > 0) { const additionalNightsCost = remainingNights * standardPricePerNight; summaryHTML += `<div class="flex justify-between text-sm text-slate-500 pl-2"><span>${remainingNights} noche(s) adicional(es) para ${guests}p</span><span class="font-medium">${formatCurrency(additionalNightsCost)}</span></div>`; } } else { summaryHTML += `<div class="flex justify-between"><span>Alojamiento (${nights} ${nights === 1 ? 'noche' : 'noches'})</span><span class="font-medium">${formatCurrency(priceComponents.accommodationCost)}</span></div>`; summaryHTML += `<div class="flex justify-between text-sm text-slate-500 pl-2"><span>Tarifa por noche</span><span class="font-medium">${formatCurrency(standardPricePerNight)}</span></div>`; } summaryHTML += `${longStayDiscount > 0 ? `<div class="flex justify-between text-green-600 pl-2"><span>Descuento +7 noches (10%)</span><span class="font-medium">-${formatCurrency(longStayDiscount)}</span></div>` : ''}${towelDiscount > 0 ? `<div class="flex justify-between text-green-600 pl-2"><span>Descuento Sábanas/Toallones</span><span class="font-medium">-${formatCurrency(towelDiscount)}</span></div>` : ''}<div class="border-t my-2"></div>${freePadelHours > 0 ? `<div class="flex justify-between text-green-600"><span>Promo: ${freePadelHours}hs de Pádel</span><span class="font-medium">GRATIS</span></div>` : ''}${padelCost > 0 ? `<div class="flex justify-between"><span>Pádel Adicional (${padelHours}hs)</span><span class="font-medium">${formatCurrency(padelCost)}</span></div>` : ''}${lateCheckoutCost > 0 ? `<div class="flex justify-between"><span>Adicional Salida Extendida</span><span class="font-medium">${formatCurrency(lateCheckoutCost)}</span></div>` : ''}<div class="border-t my-4"></div><div class="flex justify-between text-xl font-bold"><span>TOTAL</span><span>${formatCurrency(total)}</span></div>`; let policiesHTML = ''; if (checkIn.getUTCFullYear() > ANIO_ACTUAL) { policiesHTML += `<li class="text-sm">Pagando el 100% al reservar, se <strong>congela la tarifa ${ANIO_ACTUAL}</strong> para tu estadía en ${checkIn.getUTCFullYear()}.</li>`; } policiesHTML += `<li class="text-sm">La reserva se confirma con un adelanto del <strong>70%</strong>. El 30% restante se ajusta a la tarifa vigente al momento del check-in.</li>`; summaryHTML += `<div class="mt-4 p-3 bg-teal-50 border border-teal-200 rounded-lg"><h4 class="font-semibold text-teal-800">Políticas de Pago</h4><ul class="list-disc list-inside text-teal-700">${policiesHTML}</ul></div>`; summaryContainer.innerHTML = summaryHTML; updateMobileFooter(); registrarLeadWeb(); }
+    function calculateQuote() { const summaryContainer = document.getElementById('quote-summary'); const priceComponents = calculatePriceComponents(); if (!priceComponents) { summaryContainer.innerHTML = `<p class="text-red-500">Faltan datos para la cotización.</p>`; return; } bookingState.quote = priceComponents; const { total, longStayDiscount, padelCost, lateCheckoutCost, towelDiscount, nights, isPromoEligible, standardPricePerNight, promoBaseRate, config } = priceComponents; const { guests, babies, pets, vehicles, checkIn, checkOut, lateCheckout, padelHours } = bookingState; const freePadelHours = nights >= 5 && !isPromoEligible ? nights : 0; const isPromoWeekendOnly = isPromoEligible && nights === 2; let checkOutTime = "12:00 hs"; if (lateCheckout) { checkOutTime = "18:00 hs"; } else if (isPromoWeekendOnly) { checkOutTime = "18:00 hs (Promo)"; } let guestText = `${guests} Adultos/Niños`; if (babies > 0) { guestText += ` + ${babies} ${babies === 1 ? 'bebé' : 'bebés'} (sin cargo)`; } let summaryHTML = `<div class="p-4 bg-slate-50 rounded-lg border"><p class="font-bold text-lg mb-2">${config.name}</p><p><strong>Check-in:</strong> ${checkIn.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} - 09:00 hs</p><p><strong>Check-out:</strong> ${checkOut.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} - ${checkOutTime}</p><p class="mt-2"><strong>Huéspedes:</strong> ${guestText}</p><p><strong>Mascotas:</strong> ${pets.charAt(0).toUpperCase() + pets.slice(1)} | <strong>Vehículo:</strong> ${vehicles.charAt(0).toUpperCase() + vehicles.slice(1)}</p></div>`; if (isPromoWeekendOnly) { summaryHTML += `<div class="mt-4 p-3 bg-amber-100 border border-amber-200 text-amber-800 rounded-lg text-center font-semibold">¡Promo Finde 3x2 Aplicada!</div>`; } summaryHTML += `<div class="border-t my-4"></div>`; if (isPromoWeekendOnly) { const promoSubtotal = promoBaseRate * 3; const promoDiscount = promoBaseRate; summaryHTML += `<div class="flex justify-between"><span>Total Estadía (3 días, 2 noches)</span><span class="font-medium">${formatCurrency(promoSubtotal)}</span></div>`; summaryHTML += `<div class="flex justify-between text-green-600"><span>Descuento Promo 3x2 (1 noche)</span><span class="font-medium">-${formatCurrency(promoDiscount)}</span></div>`; } else if (isPromoEligible) { const promoPackageCost = 2 * promoBaseRate; summaryHTML += `<div class="flex justify-between"><span>Paquete Promo Finde (2 noches)</span><span class="font-medium">${formatCurrency(promoPackageCost)}</span></div>`; const remainingNights = nights - 2; if (remainingNights > 0) { const additionalNightsCost = remainingNights * standardPricePerNight; summaryHTML += `<div class="flex justify-between text-sm text-slate-500 pl-2"><span>${remainingNights} noche(s) adicional(es) para ${guests}p</span><span class="font-medium">${formatCurrency(additionalNightsCost)}</span></div>`; } } else { summaryHTML += `<div class="flex justify-between"><span>Alojamiento (${nights} ${nights === 1 ? 'noche' : 'noches'})</span><span class="font-medium">${formatCurrency(priceComponents.accommodationCost)}</span></div>`; summaryHTML += `<div class="flex justify-between text-sm text-slate-500 pl-2"><span>Tarifa por noche</span><span class="font-medium">${formatCurrency(standardPricePerNight)}</span></div>`; } summaryHTML += `${longStayDiscount > 0 ? `<div class="flex justify-between text-green-600 pl-2"><span>Descuento +7 noches (10%)</span><span class="font-medium">-${formatCurrency(longStayDiscount)}</span></div>` : ''}${towelDiscount > 0 ? `<div class="flex justify-between text-green-600 pl-2"><span>Descuento Sábanas/Toallones</span><span class="font-medium">-${formatCurrency(towelDiscount)}</span></div>` : ''}<div class="border-t my-2"></div>${freePadelHours > 0 ? `<div class="flex justify-between text-green-600"><span>Promo: ${freePadelHours}hs de Pádel</span><span class="font-medium">GRATIS</span></div>` : ''}${padelCost > 0 ? `<div class="flex justify-between"><span>Pádel Adicional (${padelHours}hs)</span><span class="font-medium">${formatCurrency(padelCost)}</span></div>` : ''}${lateCheckoutCost > 0 ? `<div class="flex justify-between"><span>Adicional Salida Extendida</span><span class="font-medium">${formatCurrency(lateCheckoutCost)}</span></div>` : ''}<div class="border-t my-4"></div><div class="flex justify-between text-xl font-bold"><span>TOTAL</span><span>${formatCurrency(total)}</span></div>`; let policiesHTML = ''; if (checkIn.getUTCFullYear() > ANIO_ACTUAL) { policiesHTML += `<li class="text-sm">Pagando el 100% al reservar, se <strong>congela la tarifa ${ANIO_ACTUAL}</strong> para tu estadía en ${checkIn.getUTCFullYear()}.</li>`; } policiesHTML += `<li class="text-sm">La reserva se confirma con un adelanto del <strong>70%</strong>. El 30% restante se ajusta a la tarifa vigente al momento del check-in.</li>`; summaryHTML += `<div class="mt-4 p-3 bg-teal-50 border border-teal-200 rounded-lg"><h4 class="font-semibold text-teal-800">Políticas de Pago</h4><ul class="list-disc list-inside text-teal-700">${policiesHTML}</ul></div>`; summaryContainer.innerHTML = summaryHTML; updateMobileFooter(); registrarLeadWeb(); }
     function preparePayment() { const { total, config, nights, isPromoEligible } = bookingState.quote; const { checkIn, checkOut, guests, babies, pets, vehicles, firstName, lastName, phone, lateCheckout } = bookingState; const advanceAmount = total * 0.70; const totalAmount = total; const transferInfo = document.getElementById('transfer-amount-info'); let transferHTML = `<p><b>Adelanto (70%):</b> ${formatCurrency(advanceAmount)}</p>`; if (checkIn.getUTCFullYear() > ANIO_ACTUAL) { transferHTML += `<div class="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-md"><h4 class="font-bold text-emerald-800">¡Asegurá y Ahorrá!</h4><p class="text-sm text-emerald-700">Pagá el <b>Total (100%): ${formatCurrency(totalAmount)}</b> y congelá la tarifa ${ANIO_ACTUAL} para tus vacaciones ${checkIn.getUTCFullYear()}.</p></div>`; } transferInfo.innerHTML = transferHTML; const mpInfo = document.getElementById('mp-amount-info'); if (mpInfo) { mpInfo.textContent = `Seña a pagar: ${formatCurrency(advanceAmount)}`; } const promoText = isPromoEligible ? '\n- PROMO FINDE APLICADA' : ''; const towelText = bookingState.bringOwnTowels ? '\n- Ahorro sábanas/toallones' : ''; let guestText = `${guests} Adultos/Niños`; if (babies > 0) { guestText += ` + ${babies} ${babies === 1 ? 'bebé' : 'bebés'}`; } let emailText = (bookingState.sendEmail && bookingState.email) ? `\n- Enviar copia a: ${bookingState.email}` : ''; const isPromoWeekendOnly = isPromoEligible && nights === 2; let checkOutTime = "12:00 hs"; if (lateCheckout) { checkOutTime = "18:00 hs"; } else if (isPromoWeekendOnly) { checkOutTime = "18:00 hs"; } const whatsappMessage = `¡Hola! Quiero confirmar mi reserva y enviar el comprobante de pago.\n*Datos del Huésped:*\n- Nombre: ${firstName} ${lastName}\n- Celular: ${phone}${emailText}\n*Detalles de la Reserva:*${promoText}${towelText}\n- Dúplex: ${config.name}\n- Check-in: ${checkIn.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} - 09:00 hs\n- Check-out: ${checkOut.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })} - ${checkOutTime}\n- Noches: ${nights}\n- Huéspedes: ${guestText}\n- Mascotas: ${pets.charAt(0).toUpperCase() + pets.slice(1)}\n- Vehículo: ${vehicles.charAt(0).toUpperCase() + vehicles.slice(1)}\n- Total cotizado: ${formatCurrency(total)}\n*Adjunto el comprobante del pago (70% o 100%).*\n¡Gracias!`; const whatsappUrl = `https://wa.me/${HOTEL_PHONE_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`; document.getElementById('whatsapp-button').onclick = () => window.open(whatsappUrl, '_blank'); }
     function contactForCardPayment() { const { total, config } = bookingState.quote; const { firstName, lastName } = bookingState; const message = `¡Hola! Estoy interesado/a en abonar mi reserva para el ${config.name} con tarjeta de crédito. Mi nombre es ${firstName} ${lastName} y el total es de ${formatCurrency(total)}. ¿Podrían enviarme el link de pago? ¡Gracias!`; const whatsappUrl = `https://wa.me/${HOTEL_PHONE_NUMBER}?text=${encodeURIComponent(message)}`; window.open(whatsappUrl, '_blank'); }
     document.addEventListener('DOMContentLoaded', () => { asegurarTarifas(); cargarPromociones(); const promoModalConfirmarBtn = document.getElementById('promo-modal-confirmar'); if (promoModalConfirmarBtn) promoModalConfirmarBtn.addEventListener('click', confirmarReservaPromo); const footerYearEl = document.getElementById('footer-year'); if (footerYearEl) footerYearEl.textContent = ANIO_ACTUAL; document.getElementById('promo-badge').classList.remove('hidden'); attachEventListeners(); updateProgressBar(); new Swiper(".swiper-duplex2", { loop: true, autoplay: { delay: 4000, disableOnInteraction: false }, pagination: { el: ".swiper-duplex2 .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-duplex2 .swiper-button-next", prevEl: ".swiper-duplex2 .swiper-button-prev" } }); new Swiper(".swiper-duplex3", { loop: true, autoplay: { delay: 4500, disableOnInteraction: false }, pagination: { el: ".swiper-duplex3 .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-duplex3 .swiper-button-next", prevEl: ".swiper-duplex3 .swiper-button-prev" } }); new Swiper(".swiper-common", { loop: true, autoplay: { delay: 5000, disableOnInteraction: false }, pagination: { el: ".swiper-common .swiper-pagination", clickable: true }, navigation: { nextEl: ".swiper-common .swiper-button-next", prevEl: ".swiper-common .swiper-button-prev" } }); });
+    </script>
+
+    <!-- Rotación del hero: 3 fotos de Ituzaingó, crossfade cada 3 s -->
+    <script>
+    (function () {
+      var slides = Array.prototype.slice.call(document.querySelectorAll('.hero-slide'));
+      if (slides.length < 2) return;
+      try {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      } catch (e) {}
+      var i = 0;
+      setInterval(function () {
+        if (document.hidden) return;
+        slides[i].classList.remove('is-active');
+        i = (i + 1) % slides.length;
+        slides[i].classList.add('is-active');
+      }, 4000);
+    })();
+    </script>
+
+    <!-- Reveal al hacer scroll (sólo estética; el contenido ya es visible sin JS) -->
+    <script>
+    (function () {
+      if (!document.documentElement.classList.contains('anim-ready')) return;
+      var els = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+      if (!els.length || !('IntersectionObserver' in window)) {
+        els.forEach(function (el) { el.classList.add('is-in'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) { entry.target.classList.add('is-in'); io.unobserve(entry.target); }
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      els.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.top < (window.innerHeight || 800) && r.bottom > 0) { el.classList.add('is-in'); }
+        else { io.observe(el); }
+      });
+      setTimeout(function () { els.forEach(function (el) { el.classList.add('is-in'); }); }, 3000);
+    })();
     </script>
 </body>
 </html>
