@@ -118,6 +118,20 @@
             html.anim-ready .reveal { opacity: 0; transform: translateY(18px); }
             html.anim-ready .reveal.is-in { opacity: 1; transform: none; transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
         }
+
+        /* --- Botón flotante de WhatsApp --- */
+        .wa-fab { position: fixed; right: 18px; bottom: 18px; z-index: 30; display: flex; align-items: center; justify-content: center; height: 56px; width: 56px; border-radius: 999px; background: #25d366; color: #fff; box-shadow: 0 10px 26px -8px rgba(18,120,72,.55); transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out), background-color .18s var(--ease-out), width .28s var(--ease-out); overflow: hidden; }
+        .wa-fab svg { width: 30px; height: 30px; flex: none; }
+        .wa-fab__label { max-width: 0; opacity: 0; white-space: nowrap; font-weight: 600; font-size: .95rem; transition: max-width .28s var(--ease-out), opacity .18s var(--ease-out), margin .28s var(--ease-out); }
+        .wa-fab:hover { background: #1ebe5d; transform: translateY(-2px); box-shadow: 0 14px 32px -8px rgba(18,120,72,.65); }
+        .wa-fab:active { transform: translateY(0); }
+        .wa-fab:focus-visible { outline: 3px solid #25d366; outline-offset: 3px; }
+        @media (min-width: 768px) {
+            .wa-fab { right: 24px; bottom: 24px; }
+            .wa-fab:hover, .wa-fab:focus-visible { width: 18.5rem; }
+            .wa-fab:hover .wa-fab__label, .wa-fab:focus-visible .wa-fab__label { max-width: 15rem; opacity: 1; margin-left: 10px; }
+        }
+        @media (prefers-reduced-motion: reduce) { .wa-fab, .wa-fab__label { transition: none; } }
     </style>
 </head>
 <body class="bg-stone-50 text-slate-800 antialiased">
@@ -384,6 +398,14 @@
             <p class="text-xs text-slate-500">© <span id="footer-year">2025</span> Las Ánforas Apart Hotel · Perú 1842, Ituzaingó, Corrientes</p>
         </div>
     </footer>
+
+    <!-- Botón flotante de WhatsApp (abre chat con el número del hotel / su bot) -->
+    <a href="https://wa.me/5493786410535?text=%C2%A1Hola%21%20Quer%C3%ADa%20hacer%20una%20consulta%20sobre%20Las%20%C3%81nforas."
+       target="_blank" rel="noopener"
+       class="wa-fab" aria-label="Contactanos por WhatsApp 24hs" title="Contactanos por WhatsApp 24hs">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span class="wa-fab__label">Contactanos por WhatsApp 24hs</span>
+    </a>
 
     <div id="mobile-footer" class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-slate-200 p-3 z-40 transition-transform translate-y-full"><div class="flex justify-between items-center"><button id="mobile-back-btn" class="text-slate-600 font-bold py-2 px-4 rounded-lg hover:bg-slate-100">Volver</button><div class="text-right"><p class="font-bold text-lg" id="mobile-price-display">Desde...</p><p class="text-sm text-slate-500" id="mobile-step-display">Paso 1 de 6</p></div><button id="mobile-next-btn" class="bg-teal-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-teal-700 disabled:bg-slate-300 disabled:cursor-not-allowed">Siguiente</button></div></div>
 
