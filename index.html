@@ -798,5 +798,29 @@
       setTimeout(function () { els.forEach(function (el) { el.classList.add('is-in'); }); }, 3000);
     })();
     </script>
+
+    <!-- Deep link a #ancla: reintenta el scroll mientras la pagina cambia de alto al cargar fotos/promos -->
+    <script>
+    (function () {
+      var raw = location.hash;
+      if (!raw || raw.length < 2) return;
+      var id;
+      try { id = decodeURIComponent(raw.slice(1)); } catch (e) { id = raw.slice(1); }
+      var target = document.getElementById(id);
+      if (!target) return;
+      var tries = 0, timer = null;
+      function jump() { target.scrollIntoView({ behavior: 'auto', block: 'start' }); }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+      jump();
+      timer = setInterval(function () { tries++; jump(); if (tries >= 12) stop(); }, 250);
+      window.addEventListener('load', function () { setTimeout(jump, 80); });
+      // si la persona scrollea a mano, dejar de corregir
+      window.addEventListener('wheel', stop, { passive: true, once: true });
+      window.addEventListener('touchmove', stop, { passive: true, once: true });
+      window.addEventListener('keydown', function (e) {
+        if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].indexOf(e.key) !== -1) stop();
+      }, { once: true });
+    })();
+    </script>
 </body>
 </html>
