@@ -808,12 +808,15 @@
       try { id = decodeURIComponent(raw.slice(1)); } catch (e) { id = raw.slice(1); }
       var target = document.getElementById(id);
       if (!target) return;
-      var tries = 0, timer = null;
-      function jump() { target.scrollIntoView({ behavior: 'auto', block: 'start' }); }
-      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+      var tries = 0, timer = null, stopped = false;
+      function jump() { if (!stopped) target.scrollIntoView({ behavior: 'auto', block: 'start' }); }
+      function stop() { stopped = true; if (timer) { clearInterval(timer); timer = null; } }
       jump();
-      timer = setInterval(function () { tries++; jump(); if (tries >= 12) stop(); }, 250);
-      window.addEventListener('load', function () { setTimeout(jump, 80); });
+      timer = setInterval(function () { tries++; jump(); if (tries >= 20) stop(); }, 250);
+      // reintentos extra cuando ya cargó todo (fotos/promos suelen asentar el alto acá)
+      window.addEventListener('load', function () {
+        [80, 600, 1500, 3000].forEach(function (ms) { setTimeout(jump, ms); });
+      });
       // si la persona scrollea a mano, dejar de corregir
       window.addEventListener('wheel', stop, { passive: true, once: true });
       window.addEventListener('touchmove', stop, { passive: true, once: true });
