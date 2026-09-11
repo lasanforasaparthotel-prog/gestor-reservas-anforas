@@ -799,7 +799,7 @@
     })();
     </script>
 
-    <!-- Deep link a #ancla: reintenta el scroll mientras la pagina cambia de alto al cargar fotos/promos -->
+    <!-- Deep link a #ancla: mantiene fijo el destino mientras la pagina cambia de alto al cargar fotos/promos -->
     <script>
     (function () {
       var raw = location.hash;
@@ -808,16 +808,27 @@
       try { id = decodeURIComponent(raw.slice(1)); } catch (e) { id = raw.slice(1); }
       var target = document.getElementById(id);
       if (!target) return;
-      var tries = 0, timer = null, stopped = false;
-      function jump() { if (!stopped) target.scrollIntoView({ behavior: 'auto', block: 'start' }); }
-      function stop() { stopped = true; if (timer) { clearInterval(timer); timer = null; } }
+      var stopped = false, ro = null, iv = null;
+      function jump() { if (!stopped) target.scrollIntoView({ block: 'start' }); }
+      function stop() {
+        if (stopped) return;
+        stopped = true;
+        if (ro) { ro.disconnect(); ro = null; }
+        if (iv) { clearInterval(iv); iv = null; }
+      }
       jump();
-      timer = setInterval(function () { tries++; jump(); if (tries >= 20) stop(); }, 250);
-      // reintentos extra cuando ya cargó todo (fotos/promos suelen asentar el alto acá)
-      window.addEventListener('load', function () {
-        [80, 600, 1500, 3000].forEach(function (ms) { setTimeout(jump, ms); });
-      });
-      // si la persona scrollea a mano, dejar de corregir
+      // Re-fija SOLO cuando el alto de la pagina cambia (reflow por fotos/promos): la
+      // correccion ocurre junto con el cambio, sin salto visible extra.
+      if ('ResizeObserver' in window && document.body) {
+        ro = new ResizeObserver(jump);
+        ro.observe(document.body);
+      } else {
+        var n = 0;
+        iv = setInterval(function () { jump(); if (++n >= 20) stop(); }, 200);
+      }
+      window.addEventListener('load', function () { setTimeout(jump, 100); });
+      setTimeout(stop, 4000); // a los 4s la pagina ya asento; dejar de observar
+      // si la persona scrollea a mano, no la molestamos mas
       window.addEventListener('wheel', stop, { passive: true, once: true });
       window.addEventListener('touchmove', stop, { passive: true, once: true });
       window.addEventListener('keydown', function (e) {
