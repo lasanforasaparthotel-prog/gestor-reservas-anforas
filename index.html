@@ -488,9 +488,8 @@
             }
 
             container.innerHTML = PROMOCIONES.map(promo => {
-                const boton = promo.duplex
-                    ? `<button onclick="iniciarReservaPromo('${promo.id}')" class="w-full mt-3 bg-teal-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-teal-700 transition-colors">Reservar esta promo</button>`
-                    : `<a href="https://wa.me/${HOTEL_PHONE_NUMBER}?text=${encodeURIComponent('¡Hola! Quiero consultar por la promo: ' + promo.titulo)}" target="_blank" class="block w-full mt-3 bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-center">Consultar por WhatsApp</a>`;
+                const mensaje = encodeURIComponent(`¡Hola! Quiero reservar la promo: ${promo.titulo}`);
+                const boton = `<a href="https://wa.me/${ANDREA_WHATSAPP_NUMBER}?text=${mensaje}" target="_blank" rel="noopener" class="block w-full mt-3 bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-center">Reservar promo</a>`;
 
                 return `
                     <article class="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all p-6 flex flex-col justify-between">
@@ -635,6 +634,7 @@
         }
     }
     const HOTEL_PHONE_NUMBER = '5493786410535';
+    const ANDREA_WHATSAPP_NUMBER = '5491138030865'; // WhatsApp personal de Andrea, para reservar promociones
     const TOWEL_DISCOUNT_PER_BED = 2000;
     const ANIO_ACTUAL = new Date().getFullYear();
 
