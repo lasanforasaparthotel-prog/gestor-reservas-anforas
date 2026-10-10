@@ -438,6 +438,7 @@
     function promosBloqueadas(checkIn, checkOut, hoyISO) { return promosSuspendidasHoy(hoyISO) || estadiaTocaPeriodoSinPromos(checkIn, checkOut) || UNIDADES_SIN_PROMOS.includes(bookingState.duplex); }
     function textoSubtituloFechas() {
         const h = hoyArgentinaISO();
+        if (UNIDADES_SIN_PROMOS.includes(bookingState.duplex)) return "Elige tu fecha de llegada y salida.";
         if (h >= PROMO_SIN_DESDE && h <= PROMO_SIN_HASTA) return "Elige tu fecha de llegada y salida.";
         if (h < PROMO_SIN_DESDE) return "¡Aprovechá la Promo 3x2 en fines de semana! (válida para estadías hasta el 31/12/2026)";
         return "¡Aprovechá la Promo 3x2 en fines de semana!";
